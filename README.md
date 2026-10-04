@@ -180,6 +180,18 @@ Before sale, the design will need:
 - [ ] Build a small pilot batch and collect customer feedback.
 - [ ] Freeze the product specification only after pilot validation.
 
+## Firmware quick start
+
+The repository now includes a basic ESP32-S3 PlatformIO project in
+[`firmware/`](firmware/). It can move two PWM hobby servos, receive simulated
+target coordinates through the serial monitor, enforce configured travel
+limits, and stop safely when target updates are lost.
+
+Open the `firmware` folder as a PlatformIO project in VS Code. See the
+[`firmware/README.md`](firmware/README.md) for wiring, commands, and safety
+notes. Camera inference and brushless-gimbal support will be added after the
+exact hardware has been selected.
+
 ## Planned repository structure
 
 ```text
