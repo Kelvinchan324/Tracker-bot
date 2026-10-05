@@ -6,19 +6,38 @@
 #include <cstdio>
 #include <deque>
 #include <string>
+#include <vector>
 using std::min;
 inline uint32_t fakeNow = 0;
 inline uint32_t duty[16] = {};
 constexpr int LOW = 0, HIGH = 1, OUTPUT = 2, INPUT_PULLUP = 3;
 inline int gpio[64] = {};
-inline void digitalWrite(uint8_t pin, int value) { gpio[pin] = value; }
+struct OutputEvent { char kind; uint8_t index; uint32_t value; };
+inline std::vector<OutputEvent> outputEvents;
+inline uint32_t setupResult[16] = {}; // Zero means no override, return requested frequency.
+inline bool setupFails[16] = {};
+inline uint32_t setupFrequency[16] = {};
+inline uint8_t setupBits[16] = {};
+inline void digitalWrite(uint8_t pin, int value) {
+  gpio[pin] = value; outputEvents.push_back({'G',pin,static_cast<uint32_t>(value)});
+}
 inline int digitalRead(uint8_t pin) { return gpio[pin]; }
 inline void pinMode(uint8_t, int) {}
 inline uint32_t millis() { return fakeNow; }
 inline void delay(uint32_t duration) { fakeNow += duration; }
-inline void ledcSetup(uint8_t, uint16_t, uint8_t) {}
-inline void ledcAttachPin(uint8_t, uint8_t) {}
-inline void ledcWrite(uint8_t channel, uint32_t value) { duty[channel] = value; }
+inline uint32_t ledcSetup(uint8_t channel, uint32_t frequency, uint8_t bits) {
+  setupFrequency[channel]=frequency; setupBits[channel]=bits;
+  outputEvents.push_back({'S',channel,bits});
+  // Model S3 capability; the old 16-bit configuration must fail this shim too.
+  if (channel>=8 || bits>14 || setupFails[channel]) return 0;
+  return setupResult[channel] ? setupResult[channel] : frequency;
+}
+inline void ledcAttachPin(uint8_t pin, uint8_t channel) {
+  outputEvents.push_back({'A',channel,pin});
+}
+inline void ledcWrite(uint8_t channel, uint32_t value) {
+  duty[channel] = value; outputEvents.push_back({'W',channel,value});
+}
 struct FakeSerial {
   std::deque<uint8_t> input;
   std::string output;

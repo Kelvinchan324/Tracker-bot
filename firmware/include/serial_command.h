@@ -92,6 +92,7 @@ inline const char* applySerialCommand(const SerialCommand& command, TrackerContr
     case CommandKind::Empty: case CommandKind::Status: case CommandKind::Help: return nullptr;
     case CommandKind::Arm:
       tracker.arm();
+      if (!tracker.pwmReady()) return "Blocked: PWM initialization failed; inspect configuration and restart";
       return tracker.isArmed() ? "Armed: last commanded position applied" : "Blocked: stop contact open";
     case CommandKind::Disarm:
       cameraMode = false; tracker.disarm(); return "Disarmed: PWM disabled";

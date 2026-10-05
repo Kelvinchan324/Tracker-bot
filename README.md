@@ -49,6 +49,12 @@ within one second of their first processed byte. Rejected lines are discarded
 through the next newline. Read the [serial controls lesson](docs/serial-controls.md)
 before attaching scripts; stopping increments still holds PWM, not motor power.
 
+PWM setup now uses the ESP32-S3's supported **14-bit, 50 Hz** configuration.
+The earlier 16-bit request was rejected by the pinned driver despite compiling.
+Both axes must report successful setup before `arm`; `status` includes `pwm_setup`.
+Read the [PWM startup lesson](docs/pwm-startup.md) and measure the actual outputs
+with motors unplugged. A successful driver return does not verify a waveform.
+
 The CAD now includes [candidate moving carriers and joint-frame review](mechanical/carrier-review.md),
 with a [labelled STEP-derived assembly review](mechanical/carrier-visual-review.png)
 showing assumed actuator axes, camera envelope and unfinished horn connections,

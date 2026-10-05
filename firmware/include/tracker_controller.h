@@ -14,6 +14,7 @@ class TrackerController {
   void setInterlockClosed(bool closed);
   bool interlockClosed() const { return interlockClosed_; }
   bool isArmed() const { return armed_; }
+  bool pwmReady() const { return yaw_.isReady() && pitch_.isReady(); }
   void updateTarget(float horizontalError, float verticalError,
                     uint32_t timestampMs);
   void stopTracking();

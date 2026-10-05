@@ -19,6 +19,8 @@ jobs:
       - run: /tmp/serial-tests
       - run: g++ -std=c++17 -Wall -Wextra -Werror -Itests/native -Ifirmware/include tests/native/test_camera_stream.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/camera-stream-tests
       - run: /tmp/camera-stream-tests
+      - run: g++ -std=c++17 -Wall -Wextra -Werror -Itests/native -Ifirmware/include tests/native/test_pwm_init.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/pwm-init-tests
+      - run: /tmp/pwm-init-tests
       - run: g++ -std=c++17 -Wall -Wextra -Werror -I firmware/include tests/native/test_red_components.cpp -o /tmp/red-tests
       - run: /tmp/red-tests
       - run: python tools/build_engineering.py

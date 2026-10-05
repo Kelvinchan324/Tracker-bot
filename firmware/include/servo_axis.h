@@ -14,6 +14,7 @@ class ServoAxis {
   void moveBy(float deltaDeg);
   void center();
   float angle() const;
+  bool isReady() const { return ready_; }
 
  private:
   uint8_t pin_;
@@ -23,5 +24,6 @@ class ServoAxis {
   float maximumDeg_;
   float angleDeg_;
   bool enabled_ = false;
+  bool ready_ = false;
 };
 

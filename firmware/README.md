@@ -91,3 +91,13 @@ changes. Neither compilation nor mocked tests proves electrical or mechanical sa
 Complete the [camera identification, polarity and latency worksheet](../docs/camera-calibration.md).
 The [serial lesson](../docs/serial-controls.md) includes grammar, failure behavior
 and a motors-disconnected test sequence. A software input check is not an E-stop.
+
+### PWM initialization gate
+
+Both supported builds use 14-bit LEDC at 50 Hz. ESP32-S3 does not support the
+previous 16-bit setting. Each axis checks the pinned driver's returned frequency;
+zero or any result other than 50 Hz inhibits arming of both axes. Startup prints
+a failure message and `status` reports `pwm_setup=FAILED`; there is no serial
+retry command. Inspect the configuration and restart deliberately with motor
+power isolated. `pwm_setup=ready` means driver setup passed, not scope verification.
+See [PWM startup tests and lesson](../docs/pwm-startup.md).

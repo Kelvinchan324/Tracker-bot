@@ -65,6 +65,21 @@ one-time fault reporting, held PWM, serial-mode independence, stop contact,
 disarmed selection and timer rollover. This tests loop ordering, not real FreeRTOS
 scheduling, blocked drivers, a frozen MCU, camera restart or electrical stopping.
 
+The PWM initialization test also includes production `main.cpp` and uses a shim
+that models the S3's 14-bit limit and records setup/write/attach/OE event order:
+
+```sh
+c++ -std=c++17 -Wall -Wextra -Werror -Itests/native -Ifirmware/include tests/native/test_pwm_init.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/pwm-init-tests
+/tmp/pwm-init-tests
+```
+
+It injects zero/49/51 Hz results for each axis, checks both-axis arming inhibition,
+startup/status messages, no automatic retry, zero duty before attaching a pin,
+both pulse commands before OE high, OE low before disabling pulses, direct-axis
+pre-setup rejection and deliberate reinitialization. An independent arithmetic
+sweep checks pulse quantization within half a 14-bit period count. This is not a
+measurement of pin routing, waveform quality, clock accuracy or power transients.
+
 Coordinate math tests (standard-library Python, also in CI):
 `python -m unittest discover -s tests -p test_frames.py`. These check right-handed
 axes, pivot/distance preservation, pitch-before-yaw composition and invalid inputs.

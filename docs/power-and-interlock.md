@@ -46,7 +46,10 @@ tolerance and actual loads change the result; rail interruption is not instantan
 ## Software behavior and limitations
 
 The OE output is held low during startup. Closing the contact permits a deliberate
-arm; opening it disables OE and PWM on the next control-loop observation.
+arm only after both PWM timer setups succeed; opening it disables OE and PWM on
+the next control-loop observation. The S3 uses 14-bit/50 Hz PWM. Source review
+found that the earlier 16-bit setting was rejected by its driver despite a clean
+build. See the [startup correction and waveform worksheet](pwm-startup.md).
 Reclosing cannot arm the controller. Serial processing is limited to 128 bytes
 per pass to avoid unbounded input processing.
 
@@ -68,6 +71,7 @@ firmware commit, instruments, wiring photographs and measured waveforms.
 | USB only, motor supply off | No sustained servo-output drive/back-fed motor rail | Not tested |
 | Motor only, USB off | Outputs unpowered/high impedance, servo-side pull-downs active | Not tested |
 | Both supplies, boot | OE low; no command until arm and contact closed | Not tested |
+| PWM setup failure | Both axes remain disarmed; OE low; status reports failure | Host fault injection passed; real waveform not tested |
 | Aux disconnected at boot | Arm refused | Not tested |
 | Arm, then press stop | Power pole opens; software disarms on observed open aux | Not tested |
 | Release stop | Still disarmed until a new deliberate arm | Not tested |

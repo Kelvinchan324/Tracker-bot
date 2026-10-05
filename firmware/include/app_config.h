@@ -1,6 +1,9 @@
 #pragma once
 
 #include <Arduino.h>
+#ifdef ARDUINO_ARCH_ESP32
+#include "soc/soc_caps.h"
+#endif
 
 namespace config {
 
@@ -21,7 +24,14 @@ constexpr uint8_t kStopSensePin = 7;
 constexpr uint8_t kYawPwmChannel = 0;
 constexpr uint8_t kPitchPwmChannel = 1;
 constexpr uint16_t kServoPwmFrequencyHz = 50;
-constexpr uint8_t kServoPwmResolutionBits = 16;
+// ESP32-S3 LEDC timers support at most 14 bits, not classic ESP32's 20.
+constexpr uint8_t kServoPwmResolutionBits = 14;
+#ifdef ARDUINO_ARCH_ESP32
+static_assert(kServoPwmResolutionBits <= SOC_LEDC_TIMER_BIT_WIDE_NUM,
+              "Servo PWM resolution exceeds this chip's LEDC capability");
+static_assert(kYawPwmChannel < SOC_LEDC_CHANNEL_NUM && kPitchPwmChannel < SOC_LEDC_CHANNEL_NUM,
+              "Servo PWM channel is unavailable on this chip");
+#endif
 
 // Start with conservative limits and widen them only after checking the CAD.
 constexpr float kYawMinDeg = 60.0F;

@@ -44,6 +44,8 @@ void printStatus() {
                 cameraReady ? "ready" : "unavailable", yawAxis.angle(),
                 pitchAxis.angle(), tracker.hasTarget(millis()) ? "yes" : "no");
   Serial.printf("stop_contact=%s\n", tracker.interlockClosed() ? "closed" : "OPEN: arm inhibited");
+  Serial.printf("pwm_setup=%s (driver result only; waveform unverified)\n",
+                tracker.pwmReady() ? "ready" : "FAILED: arm inhibited");
   Serial.printf("camera_stream=%s\n", cameraReady ? cameraStream.state(millis()) : "unavailable");
   Serial.printf("last_frame=%s, red_samples=%lu, candidates=%u, selected_samples=%lu",
                 cameraFrameStateName(lastCameraTarget.state),
@@ -89,6 +91,7 @@ void setup() {
   pinMode(config::kStopSensePin, INPUT_PULLUP);
   Serial.begin(115200);
   delay(500);
+  if (!tracker.pwmReady()) Serial.println("PWM initialization FAILED: arming blocked; inspect configuration and restart");
   cameraReady = startCameraTarget();
   Serial.println(cameraReady ? "Camera ready; motors DISARMED" : "Serial-only; motors DISARMED");
   printHelp();

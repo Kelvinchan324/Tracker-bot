@@ -18,6 +18,9 @@ TrackerController::TrackerController(ServoAxis& yaw, ServoAxis& pitch)
 void TrackerController::begin() {
   digitalWrite(config::kPwmEnablePin, LOW);
   pinMode(config::kPwmEnablePin, OUTPUT);
+  stopTracking();
+  armed_ = false;
+  interlockClosed_ = false;
   yaw_.begin();
   pitch_.begin();
   lastControlMs_ = millis();
@@ -39,7 +42,7 @@ void TrackerController::updateTarget(float horizontalError,
 }
 
 void TrackerController::arm() {
-  if (!interlockClosed_) return;
+  if (!interlockClosed_ || !pwmReady()) return;
   stopTracking();
   lastControlMs_ = millis();
   yaw_.enable();
