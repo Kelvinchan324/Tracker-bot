@@ -49,11 +49,23 @@ disarm
 - `target x y` accepts finite values in [-1,1], in armed serial mode only.
   Negative x/y means left/up. Actual installed directions need a hardware check.
 - Targets expire after 750 ms; the last pulse is held. There is no encoder feedback.
+- Camera targets retain the capture-start timestamp. Only complete 160x120
+  RGB565 frames with valid, nonfuture timestamps within 750 ms are processed;
+  queue/processing time does not refresh their age. Controller input also rejects
+  stale/future timestamps. At the exact 750 ms boundary a target is still eligible.
 - `camera` enables marker input if capture initialized; it does not arm motors.
+- Missing/invalid/no-marker frames stop increments when delivered; a stalled
+  camera task receives no new observations and the last target expires. Camera
+  mode stays selected, so a valid marker can resume tracking automatically.
 - `serial`, `stop` and `center` leave camera tracking; `center` needs arming.
 - `disarm` removes PWM but is not a physical power cut; support the payload.
 - `status` reports arming, input mode, camera state, commanded angles and target.
+- `last_frame` is the most recently received frame result, not camera health.
+  Check `capture_age_ms` and `target` as well: a hung task can leave an old
+  `marker` label. `red_samples` counts every-other-row/column samples, not area.
 - Pins, ranges, deadband and gain are in `include/app_config.h`.
 
 Use [host logic tests](../tests/README.md) and compile both environments after
 changes. Neither compilation nor mocked tests proves electrical or mechanical safety.
+
+Complete the [camera identification, polarity and latency worksheet](../docs/camera-calibration.md).

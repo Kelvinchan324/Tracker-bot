@@ -29,6 +29,14 @@ people. The earlier product vision below describes future goals.
    Enter `serial` to return to manual target input. Use `status` for diagnostics.
 7. Follow the four lessons in the engineering manual and save the measured results.
 
+Read the [camera freshness and calibration lesson](docs/camera-calibration.md)
+before marker tracking. Frame age is measured from capture start, not retrieval.
+`status` reports the last frame classification, red sample count and capture age.
+Loss stops incremental commands but holds PWM; a valid marker can automatically
+resume tracking while camera mode remains selected. Use `stop`, `serial` or
+`disarm` to prevent that automatic resumption. No encoder or obstruction sensor
+is implemented, and physical stopping remains unvalidated.
+
 The CAD now includes [candidate moving carriers and joint-frame review](mechanical/carrier-review.md),
 not a finished pan/tilt mechanism. Run `python tools/build_engineering.py --cad`,
 `python tools/build_mounts.py`, then `python tools/build_carriers.py` with CadQuery
@@ -223,7 +231,8 @@ Before sale, the design will need:
 The repository now includes a basic ESP32-S3 PlatformIO project in
 [`firmware/`](firmware/). It can move two PWM hobby servos, receive simulated
 target coordinates through the serial monitor, enforce configured travel
-limits, and stop safely when target updates are lost.
+limits, and stop issuing incremental targets when updates are lost. Holding a
+commanded position is not a verified physical stop.
 
 Open the `firmware` folder as a PlatformIO project in VS Code. See the
 [`firmware/README.md`](firmware/README.md) for wiring, commands, and safety

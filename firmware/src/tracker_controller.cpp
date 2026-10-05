@@ -27,7 +27,8 @@ void TrackerController::updateTarget(float horizontalError,
                                      float verticalError,
                                      uint32_t timestampMs) {
   if (!armed_ || !isfinite(horizontalError) || !isfinite(verticalError) ||
-      fabsf(horizontalError) > 1.0F || fabsf(verticalError) > 1.0F) {
+      fabsf(horizontalError) > 1.0F || fabsf(verticalError) > 1.0F ||
+      uint32_t(millis() - timestampMs) > config::kTargetTimeoutMs) {
     stopTracking();
     return;
   }

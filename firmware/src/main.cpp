@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <math.h>
 #include "camera_target.h"
+#include "camera_frame.h"
 
 #include "app_config.h"
 #include "servo_axis.h"
@@ -18,6 +19,7 @@ String serialLine;
 bool serialOverflow = false;
 bool cameraReady = false;
 bool cameraMode = false;
+CameraTarget lastCameraTarget{false, 0, 0, 0, 0, CameraFrameState::NoFrame};
 
 void printHelp() {
   Serial.println();
@@ -39,6 +41,13 @@ void printStatus() {
                 cameraReady ? "ready" : "unavailable", yawAxis.angle(),
                 pitchAxis.angle(), tracker.hasTarget(millis()) ? "yes" : "no");
   Serial.printf("stop_contact=%s\n", tracker.interlockClosed() ? "closed" : "OPEN: arm inhibited");
+  Serial.printf("last_frame=%s, red_samples=%lu", cameraFrameStateName(lastCameraTarget.state),
+                static_cast<unsigned long>(lastCameraTarget.pixels));
+  if (lastCameraTarget.state == CameraFrameState::Marker ||
+      lastCameraTarget.state == CameraFrameState::NoMarker ||
+      lastCameraTarget.state == CameraFrameState::StaleFrame)
+    Serial.printf(", capture_age_ms=%lu", static_cast<unsigned long>(millis() - lastCameraTarget.timestamp));
+  Serial.println();
 }
 
 void handleCommand(String command) {
@@ -135,10 +144,13 @@ void loop() {
   if (!stopClosed) cameraMode = false;
   readSerialCommands();
   CameraTarget target{};
-  if (readCameraTarget(target) && cameraMode) {
-    if (target.found && millis() - target.timestamp <= config::kTargetTimeoutMs)
-      tracker.updateTarget(target.x, target.y, target.timestamp);
-    else tracker.stopTracking();
+  if (readCameraTarget(target)) {
+    lastCameraTarget = target;
+    if (cameraMode) {
+      if (target.found && millis() - target.timestamp <= config::kTargetTimeoutMs)
+        tracker.updateTarget(target.x, target.y, target.timestamp);
+      else tracker.stopTracking();
+    }
   }
   tracker.tick(millis());
 

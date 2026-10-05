@@ -15,6 +15,13 @@ Replace `c++` with `python -m ziglang c++` and choose an output path under an ig
 Neither test substitutes for the staged electrical and mechanical acceptance
 procedure in `docs/engineering.md`.
 
+The same native binary tests the production `camera_frame.h` boundary: exact
+RGB565 dimensions/length, capture-age boundaries, malformed/future timestamps,
+overflow-resistant conversion, millisecond rollover, red sample threshold,
+green/white rejection and original capture timestamp preservation into control.
+Camera metadata and GPIO/time are synthetic; FreeRTOS scheduling, actual DMA
+buffers, byte order, sensor output and PWM are not exercised on hardware.
+
 Coordinate math tests (standard-library Python, also in CI):
 `python -m unittest discover -s tests -p test_frames.py`. These check right-handed
 axes, pivot/distance preservation, pitch-before-yaw composition and invalid inputs.

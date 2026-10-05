@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include "camera_target.h"
-#include "red_target.h"
+#include "camera_frame.h"
+#include "app_config.h"
 #ifdef TRACKER_XIAO_SENSE
 #include "esp_camera.h"
+#include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
@@ -11,10 +13,11 @@ QueueHandle_t queue = nullptr;
 void captureTask(void*) {
   for (;;) {
     camera_fb_t* frame = esp_camera_fb_get();
-    CameraTarget target{false, 0, 0, millis()};
+    CameraTarget target{false, 0, 0, 0, 0, CameraFrameState::NoFrame};
     if (frame) {
-      auto result = findRedTarget(frame->buf, frame->len, frame->width, frame->height);
-      target.found = result.found; target.x = result.x; target.y = result.y;
+      target = processCameraFrame(frame->buf, frame->len, frame->width, frame->height,
+          frame->format == PIXFORMAT_RGB565, frame->timestamp.tv_sec,
+          frame->timestamp.tv_usec, esp_timer_get_time(), config::kTargetTimeoutMs);
       esp_camera_fb_return(frame);
     }
     xQueueOverwrite(queue, &target);
