@@ -63,7 +63,11 @@ disarm
   queue/processing time does not refresh their age. Controller input also rejects
   stale/future timestamps. At the exact 750 ms boundary a target is still eligible.
 - `camera` enables marker input if capture initialized; it does not arm motors.
-- Missing/invalid/no-marker frames stop increments when delivered; a stalled
+- Exactly one four-connected red region with at least 20 sampled pixels is
+  required. Multiple qualifying regions report `ambiguous`; disconnected smaller
+  speckles are excluded from the centroid. Touching objects/red bridges can merge;
+  no identity lock, shape test or upper-area rejection is implemented.
+- Missing/invalid/no-marker/ambiguous frames stop increments when delivered; a stalled
   camera task receives no new observations and the last target expires. Camera
   mode stays selected, so a valid marker can resume tracking automatically.
 - `serial`, `stop` and `center` leave camera tracking; `center` needs arming.

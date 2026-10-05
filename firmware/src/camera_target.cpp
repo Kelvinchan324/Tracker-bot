@@ -10,14 +10,15 @@
 #include "freertos/task.h"
 namespace {
 QueueHandle_t queue = nullptr;
+RedTargetWorkspace cameraWorkspace; // Capture task is the sole owner (14,400 bytes).
 void captureTask(void*) {
   for (;;) {
     camera_fb_t* frame = esp_camera_fb_get();
-    CameraTarget target{false, 0, 0, 0, 0, CameraFrameState::NoFrame};
+    CameraTarget target{false, 0, 0, 0, 0, CameraFrameState::NoFrame, 0, 0};
     if (frame) {
       target = processCameraFrame(frame->buf, frame->len, frame->width, frame->height,
           frame->format == PIXFORMAT_RGB565, frame->timestamp.tv_sec,
-          frame->timestamp.tv_usec, esp_timer_get_time(), config::kTargetTimeoutMs);
+          frame->timestamp.tv_usec, esp_timer_get_time(), config::kTargetTimeoutMs, cameraWorkspace);
       esp_camera_fb_return(frame);
     }
     xQueueOverwrite(queue, &target);

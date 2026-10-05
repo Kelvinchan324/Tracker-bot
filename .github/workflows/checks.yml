@@ -16,6 +16,8 @@ jobs:
       - run: /tmp/tracker-tests
       - run: g++ -std=c++17 -Wall -Wextra -Werror -Itests/native -Ifirmware/include tests/native/test_serial.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/serial-tests
       - run: /tmp/serial-tests
+      - run: g++ -std=c++17 -Wall -Wextra -Werror -I firmware/include tests/native/test_red_components.cpp -o /tmp/red-tests
+      - run: /tmp/red-tests
       - run: python tools/build_engineering.py
       - run: git diff --exit-code -- hardware/BOM.md hardware/schematic.svg mechanical/placements.json mechanical/placement.svg
       - run: pio run -d firmware -e xiao-sense -e esp32-s3-devkitc-1

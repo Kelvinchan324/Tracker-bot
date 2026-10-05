@@ -19,7 +19,7 @@ TrackerController tracker(yawAxis, pitchAxis);
 SerialLineBuffer serialInput;
 bool cameraReady = false;
 bool cameraMode = false;
-CameraTarget lastCameraTarget{false, 0, 0, 0, 0, CameraFrameState::NoFrame};
+CameraTarget lastCameraTarget{false, 0, 0, 0, 0, CameraFrameState::NoFrame, 0, 0};
 
 void printHelp() {
   Serial.println();
@@ -42,10 +42,14 @@ void printStatus() {
                 cameraReady ? "ready" : "unavailable", yawAxis.angle(),
                 pitchAxis.angle(), tracker.hasTarget(millis()) ? "yes" : "no");
   Serial.printf("stop_contact=%s\n", tracker.interlockClosed() ? "closed" : "OPEN: arm inhibited");
-  Serial.printf("last_frame=%s, red_samples=%lu", cameraFrameStateName(lastCameraTarget.state),
-                static_cast<unsigned long>(lastCameraTarget.pixels));
+  Serial.printf("last_frame=%s, red_samples=%lu, candidates=%u, selected_samples=%lu",
+                cameraFrameStateName(lastCameraTarget.state),
+                static_cast<unsigned long>(lastCameraTarget.pixels),
+                static_cast<unsigned>(lastCameraTarget.candidates),
+                static_cast<unsigned long>(lastCameraTarget.selectedPixels));
   if (lastCameraTarget.state == CameraFrameState::Marker ||
       lastCameraTarget.state == CameraFrameState::NoMarker ||
+      lastCameraTarget.state == CameraFrameState::Ambiguous ||
       lastCameraTarget.state == CameraFrameState::StaleFrame)
     Serial.printf(", capture_age_ms=%lu", static_cast<unsigned long>(millis() - lastCameraTarget.timestamp));
   Serial.println();

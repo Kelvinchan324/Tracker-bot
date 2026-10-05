@@ -11,6 +11,7 @@
 bool near(float a, float b) { return std::fabs(a - b) < 0.001F; }
 
 int main() {
+  RedTargetWorkspace work;
   ServoAxis yaw(1, 0, 60, 90, 120), pitch(2, 1, 70, 90, 110);
   TrackerController tracker(yaw, pitch);
   tracker.begin();
@@ -76,21 +77,21 @@ int main() {
   // 25 sampled red pixels occupy the bottom-right quadrant.
   for (int y = 10; y < 20; ++y) for (int x = 10; x < 20; ++x)
     frame[(y * 20 + x) * 2] = 0xF8;
-  auto target = findRedTarget(frame.data(), frame.size(), 20, 20);
+  auto target = findRedTarget(frame.data(), frame.size(), 20, 20, work);
   assert(target.found && target.pixels == 25 && target.x > 0 && target.y > 0);
   for (size_t i = 0; i < frame.size(); i += 2) { frame[i] = 0; frame[i+1] = 0x1F; }
-  assert(!findRedTarget(frame.data(), frame.size(), 20, 20).found);
-  assert(!findRedTarget(nullptr, 800, 20, 20).found);
-  assert(!findRedTarget(frame.data(), 799, 20, 20).found);
-  assert(!findRedTarget(frame.data(), 800, 0, 20).found);
-  assert(!findRedTarget(frame.data(), 800, UINT16_MAX, 20).found);
+  assert(!findRedTarget(frame.data(), frame.size(), 20, 20, work).found);
+  assert(!findRedTarget(nullptr, 800, 20, 20, work).found);
+  assert(!findRedTarget(frame.data(), 799, 20, 20, work).found);
+  assert(!findRedTarget(frame.data(), 800, 0, 20, work).found);
+  assert(!findRedTarget(frame.data(), 800, UINT16_MAX, 20, work).found);
 
   std::vector<uint8_t> cameraFrame(160 * 120 * 2, 0);
   for (int y = 20; y < 30; y += 2) for (int x = 100; x < 110; x += 2)
     cameraFrame[(y * 160 + x) * 2] = 0xF8;
   auto process = [&](int64_t sec, int64_t usec, int64_t now) {
     return processCameraFrame(cameraFrame.data(), cameraFrame.size(), 160, 120,
-                              true, sec, usec, now, 750);
+                              true, sec, usec, now, 750, work);
   };
   auto captured = process(2, 500000, 2600000);
   assert(captured.found && captured.pixels == 25 && captured.timestamp == 2500);
@@ -103,13 +104,13 @@ int main() {
                    process(0, 0, -1)})
     assert(!bad.found && bad.state == CameraFrameState::InvalidFrame);
   assert(!processCameraFrame(cameraFrame.data(), cameraFrame.size(), 160, 120,
-                             false, 2, 0, 2000000, 750).found);
+                             false, 2, 0, 2000000, 750, work).found);
   assert(!processCameraFrame(cameraFrame.data(), cameraFrame.size() - 1, 160, 120,
-                             true, 2, 0, 2000000, 750).found);
+                             true, 2, 0, 2000000, 750, work).found);
   assert(!processCameraFrame(cameraFrame.data(), cameraFrame.size(), 120, 160,
-                             true, 2, 0, 2000000, 750).found);
+                             true, 2, 0, 2000000, 750, work).found);
   assert(!processCameraFrame(nullptr, cameraFrame.size(), 160, 120,
-                             true, 2, 0, 2000000, 750).found);
+                             true, 2, 0, 2000000, 750, work).found);
   std::fill(cameraFrame.begin(), cameraFrame.end(), 0);
   assert(process(2, 0, 2000000).state == CameraFrameState::NoMarker);
   for (int x = 0; x < 19; ++x) cameraFrame[x * 4] = 0xF8;

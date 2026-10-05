@@ -22,6 +22,21 @@ green/white rejection and original capture timestamp preservation into control.
 Camera metadata and GPIO/time are synthetic; FreeRTOS scheduling, actual DMA
 buffers, byte order, sensor output and PWM are not exercised on hardware.
 
+The connected-region detector has a separate strict-warning native test:
+
+```sh
+c++ -std=c++17 -Wall -Wextra -Werror -Ifirmware/include tests/native/test_red_components.cpp -o /tmp/red-tests
+/tmp/red-tests
+```
+
+It checks unique and ambiguous candidates, subthreshold split regions, speckles
+not shifting the centroid, diagonal versus side-connected contact, full-frame
+4,800-sample capacity with workspace canaries, checkerboard noise, edge/odd-size
+inputs and reuse without stale samples. Full-red and bridged-region acceptance
+are explicitly tested **limitations**, not proof of object recognition. The
+14,400-byte workspace belongs to the capture task; concurrent callers require
+separate workspaces. No native timing result is an ESP32 latency measurement.
+
 Run the production serial parser, fixed line buffer and command effects against
 the real controller/servo sources and host shim:
 

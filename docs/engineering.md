@@ -89,7 +89,9 @@ Default nominal software ranges are yaw 60–120, pitch 70–110 degrees, with
 1000–2000 microsecond mapping. They are command coordinates, not encoder readings.
 
 Marker mode thresholds red pixels in 160 x 120 RGB565 frames. It is sensitive to
-lighting and background objects. Two red objects yield a combined centroid.
+lighting and background objects. Exactly one four-connected red region of at
+least 20 samples is required; multiple qualifying regions reject as ambiguous.
+Touching objects may merge and a lone distractor may qualify; no identity lock.
 Verify byte order, sensor orientation and motor polarity on the actual camera;
 OV2640 and OV3660 board revisions require separate checks.
 

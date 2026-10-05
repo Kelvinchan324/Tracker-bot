@@ -31,7 +31,10 @@ people. The earlier product vision below describes future goals.
 
 Read the [camera freshness and calibration lesson](docs/camera-calibration.md)
 before marker tracking. Frame age is measured from capture start, not retrieval.
-`status` reports the last frame classification, red sample count and capture age.
+`status` reports the last frame classification, red sample/candidate/selected
+counts and capture age. Two separate qualifying red regions now reject as
+`ambiguous`; a unique region needs at least 20 connected samples. Touching objects
+can still merge, and a lone distractor can still qualify—this is not identity tracking.
 Loss stops incremental commands but holds PWM; a valid marker can automatically
 resume tracking while camera mode remains selected. Use `stop`, `serial` or
 `disarm` to prevent that automatic resumption. No encoder or obstruction sensor

@@ -8,9 +8,17 @@ and embedded builds are not evidence that a real camera or mechanism works.
 The reference mode is tightly packed, MSB-first RGB565 at 160x120 (38,400 bytes).
 The capture boundary rejects other metadata before reading pixels. Red is a
 simple channel-dominance threshold, sampled on every second row/column, with a
-minimum of 20 red samples. It is not an object classifier or connected-component
-detector. Multiple red objects, reflections and scattered noise can contribute
-to the same centroid. A one-pixel shift can change sampled counts.
+minimum of 20 red samples **per four-connected region** on the sampled grid.
+Exactly one qualifying region is required. With two or more, the result is
+`ambiguous`, coordinates are cleared and delivered results stop increments.
+Smaller disconnected regions are excluded from the accepted region's centroid.
+A one-pixel shift can change sampled counts and connectivity.
+
+This is not object identity recognition. Touching regions or a sampled red bridge
+merge into one region; a red wall can qualify. A lone distractor can become the
+accepted region when the original marker leaves, and re-entry remains automatic.
+No area upper bound, shape model, temporal association or identity lock is provided.
+The 20-sample threshold is an uncalibrated experiment setting, not a confidence score.
 
 The old path assigned the time of frame retrieval, allowing a buffered old
 image to appear recent. The corrected path preserves capture-start time, rejects
@@ -35,17 +43,36 @@ timing on either sensor revision; verify with the actual board.
 | Observation | Control response while armed in camera mode |
 | --- | --- |
 | Fresh valid marker | Bounded incremental targets; no encoder feedback |
-| Delivered invalid/stale/no-marker/no-frame result | Stop new increments; keep last PWM |
+| Delivered invalid/stale/no-marker/ambiguous/no-frame result | Stop new increments; keep last PWM |
 | Capture task stalls or queue stays silent | Last capture-based target expires; keep last PWM |
 | Fresh marker returns | Tracking automatically resumes while camera mode remains selected |
 | `stop` or `serial` | Exit camera mode and stop tracking increments |
 | `disarm` or open auxiliary stop contact | Disable PWM/OE; payload may fall; physical power cut still required |
 
-`status` prints `last_frame`, `red_samples`, and (where a timestamp is valid)
+`status` prints `last_frame`, `red_samples` (all red samples), `candidates`
+(regions with at least 20 samples), `selected_samples` (accepted region only,
+zero when none/ambiguous), and (where a timestamp is valid)
 `capture_age_ms`. An old `marker` label can persist after a task hangs: it means
 last received result, not a continuously healthy camera. Check age and `target`.
 Camera processing remains active in serial/disarmed modes; no network upload is
 implemented. `stop` is not a camera privacy shutter or motor-power isolation.
+
+## Connected-region exercise (motors disconnected)
+
+Run the native component test in [tests/README.md](../tests/README.md). It uses
+synthetic RGB565: one region qualifies; two separated 20-sample regions reject;
+24 samples split into two 12-sample regions do not qualify; isolated speckles
+do not pull the accepted centroid. Diagonal-only contact stays separate, while
+a one-sample side-connected bridge merges regions. Explain why the last result
+is a limitation rather than evidence of reliable object identity.
+
+On the actual camera, record the same trials with motors disconnected and a
+plain background. Log candidate/selected counts, lighting and capture age. Do
+not widen travel or enable motion based solely on synthetic passing cases.
+Capture owns a fixed 14,400-byte workspace outside its 4,096-byte task stack;
+the flood fill visits each sampled cell at most once, without recursion or heap
+allocation. QQVGA is the maximum supported detector size. Actual processing
+latency, stack high-water mark and available runtime heap still need measurement.
 
 ## Teaching procedure
 
