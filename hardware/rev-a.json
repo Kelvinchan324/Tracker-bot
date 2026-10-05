@@ -286,7 +286,7 @@
       "ref": "H3",
       "name": "Draft yaw servo seat (parametric printed candidate)",
       "qty": 1,
-      "selection": "NOT fabrication approved; retention, fit and plate attachment unresolved",
+      "selection": "NOT fabrication approved; retention/fit unresolved; candidate plate holes now supplied",
       "source": "[Mechanical draft guide](../mechanical/README.md)",
       "pins": {}
     },
@@ -294,9 +294,24 @@
       "ref": "H4",
       "name": "Draft camera saddle (parametric printed candidate)",
       "qty": 1,
-      "selection": "NOT fabrication approved; floating until pitch carrier is designed",
+      "selection": "NOT fabrication approved; rests on candidate pitch carrier; actual horn connection unresolved",
       "source": "[Mechanical draft guide](../mechanical/README.md)",
       "pins": {}
+    },
+    {
+      "ref": "H5", "name": "Candidate yaw-to-pitch carrier", "qty": 1,
+      "selection": "Parametric draft; supplied-horn attachment and servo retention NOT defined",
+      "source": "[Carrier and frame review](../mechanical/carrier-review.md)", "pins": {}
+    },
+    {
+      "ref": "H6", "name": "Candidate pitch-to-camera carrier", "qty": 1,
+      "selection": "Parametric draft; pitch horn pattern and shaft load review unresolved",
+      "source": "[Carrier and frame review](../mechanical/carrier-review.md)", "pins": {}
+    },
+    {
+      "ref": "H7", "name": "M3 candidate mount fastener sets", "qty": 4,
+      "selection": "Two yaw-seat/plate plus two saddle/carrier joints; length, access and locking TBD",
+      "source": "[Carrier and frame review](../mechanical/carrier-review.md)", "pins": {}
     },
     {
       "ref": "H1",

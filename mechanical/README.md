@@ -6,8 +6,8 @@ It is not a full moving assembly. Two additional parametric candidates now exist
 - `yaw-seat-draft.step/.stl`: servo body seat, cable relief and slotted mounting feet.
 - `camera-saddle-draft.step/.stl`: open-ended board saddle with slotted mounting feet.
 - `mounting-drafts.step`: both candidates in the same world coordinates as their
-  component envelopes. Their separated locations are intentional; no connecting
-  mechanism is modeled yet.
+  component envelopes. This earlier file contains the two mounts only; the newer
+  [carrier assembly and review](carrier-review.md) adds candidate connecting parts.
 
 Run `python tools/build_mounts.py` from the repository root with CadQuery 2.8.0.
 Edit `mount-parameters.json` for walls, fit allowance and slots; component sizes
@@ -25,13 +25,14 @@ and computational volume/fit checks.
 | Camera board | 22 x 18 x 15 mm assumed clearance envelope at (15,0,87) | Exact board/camera stack, antenna, lens and USB access |
 | Camera saddle | Open ends, 8 mm walls, slotted feet | Must not contact antenna or block field of view |
 | Mount foot slots | 6 mm total length, 3.4 mm width, elongated along Y | Matching holes/backing access, screw length and edge strength |
-| Yaw-to-pitch carrier | NOT MODELED | Design around supplied horns and measured centres |
-| Pitch-to-camera joint | NOT MODELED | Supplied horn attachment, opposite-side bearing/load review |
+| Yaw-to-pitch carrier | Candidate deck, risers and pitch seat | Supplied horn attachment, positive retention and measured centres |
+| Pitch-to-camera joint | Candidate side plate and camera shelf | Supplied horn attachment, opposite-side bearing/load review |
 
 The yaw seat bottom is at the fixture plate top (4 mm). The camera saddle is
-positioned under the camera envelope, but it is floating until its carrier is
-designed. Plate exports do not yet contain the new mounting-foot patterns.
-Do not treat floating CAD or zero envelope interference as a functioning mechanism.
+positioned under the camera envelope. In `carrier-layout.step` it rests on a
+candidate shelf; horn coupling is still unresolved. `carrier-fixture-plate.step`
+adds matching yaw-seat holes; the original fixture plate export remains unchanged.
+Do not treat concept connections or zero envelope intrusion as a functioning mechanism.
 
 ## Measurement lesson (60 minutes)
 

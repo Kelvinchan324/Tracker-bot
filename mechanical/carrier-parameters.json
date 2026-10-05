@@ -1,0 +1,31 @@
+{
+  "status": "Concept carrier geometry; joint origins are unmeasured assumptions",
+  "yaw_axis_origin_mm": [0, 0, 37],
+  "yaw_axis_direction": [0, 0, 1],
+  "pitch_axis_origin_mm": [0, 18, 60],
+  "pitch_axis_direction": [0, 1, 0],
+  "yaw_deck_bottom_z": 38.0,
+  "yaw_deck_radius": 22.0,
+  "wall": 3.0,
+  "seat_base": 2.5,
+  "seat_clearance": 0.6,
+  "seat_wall_height": 6.0,
+  "riser_x": 14.0,
+  "riser_depth": 20.0,
+  "pitch_plate_y": 21.0,
+  "pitch_disc_radius": 10.0,
+  "camera_shelf_x_bounds": [-10.0, 40.0],
+  "camera_shelf_y_bounds": [-18.0, 24.0],
+  "sample_yaw_deg": [-30, -15, 0, 15, 30],
+  "sample_pitch_deg": [-20, -10, 0, 10, 20],
+  "camera_optical_frame": null,
+  "unresolved": [
+    "actual servo shaft offsets and horn planes",
+    "both horn-to-carrier fastener patterns and spline screws",
+    "positive pitch/yaw servo body retention",
+    "opposite-side pitch bearing and shaft load capacity",
+    "camera board retention and optical frame calibration",
+    "wire loops, connectors, pinch points and continuous swept-volume review",
+    "material, fabrication tolerances, load, fatigue and actual travel calibration"
+  ]
+}

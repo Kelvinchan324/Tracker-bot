@@ -14,3 +14,10 @@ Replace `c++` with `python -m ziglang c++` and choose an output path under an ig
 `build/` directory. Embedded compilation is separate: `pio run -d firmware`.
 Neither test substitutes for the staged electrical and mechanical acceptance
 procedure in `docs/engineering.md`.
+
+Coordinate math tests (standard-library Python, also in CI):
+`python -m unittest discover -s tests -p test_frames.py`. These check right-handed
+axes, pivot/distance preservation, pitch-before-yaw composition and invalid inputs.
+The optional CadQuery generator `python tools/build_carriers.py` performs local
+25-pose solid/envelope intrusion checks; it is not part of lightweight CI and
+does not establish continuous clearance or physical calibration.

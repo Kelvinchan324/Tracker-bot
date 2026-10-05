@@ -1,0 +1,558 @@
+{
+  "physical_validation": false,
+  "status": "Sampled envelope/solid review only; no continuous clearance or hardware release",
+  "assumed_joint_frames": {
+    "yaw": {
+      "origin_mm": [
+        0,
+        0,
+        37
+      ],
+      "axis": [
+        0,
+        0,
+        1
+      ]
+    },
+    "pitch_in_yaw_zero_frame": {
+      "origin_mm": [
+        0,
+        18,
+        60
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ]
+    }
+  },
+  "camera_optical_frame": null,
+  "firmware_command_ranges_min_center_max": {
+    "yaw": [
+      60.0,
+      90.0,
+      120.0
+    ],
+    "pitch": [
+      70.0,
+      90.0,
+      110.0
+    ]
+  },
+  "angle_mapping": "Planning assumption: command minus centre; real motor sign and scale uncalibrated",
+  "assembly_solids": 11,
+  "sample_count": 25,
+  "samples_with_intrusion": 0,
+  "samples": [
+    {
+      "yaw_offset_deg": -30,
+      "pitch_offset_deg": -20,
+      "pitch_axis_origin_world_mm": [
+        8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        4.209615636637962,
+        -2.4304227209977847,
+        90.50200291110457
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -30,
+      "pitch_offset_deg": -10,
+      "pitch_axis_origin_world_mm": [
+        8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        8.732667183414897,
+        -5.041807749088,
+        89.19453199633357
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -30,
+      "pitch_offset_deg": 0,
+      "pitch_axis_origin_world_mm": [
+        8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        12.99038105676658,
+        -7.499999999999999,
+        87.0
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -30,
+      "pitch_offset_deg": 10,
+      "pitch_axis_origin_world_mm": [
+        8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        16.853388775158404,
+        -9.730308546095118,
+        83.98508666632566
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -30,
+      "pitch_offset_deg": 20,
+      "pitch_axis_origin_world_mm": [
+        8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        20.20431480384325,
+        -11.664966590790838,
+        80.24139861133449
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -15,
+      "pitch_offset_deg": -20,
+      "pitch_axis_origin_world_mm": [
+        4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        4.695216150023023,
+        -1.2580793756882338,
+        90.50200291110457
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -15,
+      "pitch_offset_deg": -10,
+      "pitch_axis_origin_world_mm": [
+        4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        9.74002463205691,
+        -2.6098317344188917,
+        89.19453199633357
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -15,
+      "pitch_offset_deg": 0,
+      "pitch_axis_origin_world_mm": [
+        4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        14.488887394336025,
+        -3.882285676537811,
+        87.0
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -15,
+      "pitch_offset_deg": 10,
+      "pitch_axis_origin_world_mm": [
+        4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        18.797512644869023,
+        -5.036778332906472,
+        83.98508666632566
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": -15,
+      "pitch_offset_deg": 20,
+      "pitch_axis_origin_world_mm": [
+        4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        22.534984985688038,
+        -6.038231028362584,
+        80.24139861133449
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 0,
+      "pitch_offset_deg": -20,
+      "pitch_axis_origin_world_mm": [
+        0.0,
+        18.0,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.0,
+        1.0,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        4.86084544199557,
+        0.0,
+        90.50200291110457
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 0,
+      "pitch_offset_deg": -10,
+      "pitch_axis_origin_world_mm": [
+        0.0,
+        18.0,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.0,
+        1.0,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        10.083615498176002,
+        0.0,
+        89.19453199633357
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 0,
+      "pitch_offset_deg": 0,
+      "pitch_axis_origin_world_mm": [
+        0.0,
+        18.0,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.0,
+        1.0,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        15.0,
+        0.0,
+        87.0
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 0,
+      "pitch_offset_deg": 10,
+      "pitch_axis_origin_world_mm": [
+        0.0,
+        18.0,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.0,
+        1.0,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        19.46061709219024,
+        0.0,
+        83.98508666632566
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 0,
+      "pitch_offset_deg": 20,
+      "pitch_axis_origin_world_mm": [
+        0.0,
+        18.0,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        0.0,
+        1.0,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        23.32993318158168,
+        0.0,
+        80.24139861133449
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 15,
+      "pitch_offset_deg": -20,
+      "pitch_axis_origin_world_mm": [
+        -4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        4.695216150023023,
+        1.2580793756882338,
+        90.50200291110457
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 15,
+      "pitch_offset_deg": -10,
+      "pitch_axis_origin_world_mm": [
+        -4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        9.74002463205691,
+        2.6098317344188917,
+        89.19453199633357
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 15,
+      "pitch_offset_deg": 0,
+      "pitch_axis_origin_world_mm": [
+        -4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        14.488887394336025,
+        3.882285676537811,
+        87.0
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 15,
+      "pitch_offset_deg": 10,
+      "pitch_axis_origin_world_mm": [
+        -4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        18.797512644869023,
+        5.036778332906472,
+        83.98508666632566
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 15,
+      "pitch_offset_deg": 20,
+      "pitch_axis_origin_world_mm": [
+        -4.658742811845373,
+        17.38666487320323,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.25881904510252074,
+        0.9659258262890683,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        22.534984985688038,
+        6.038231028362584,
+        80.24139861133449
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 30,
+      "pitch_offset_deg": -20,
+      "pitch_axis_origin_world_mm": [
+        -8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        4.209615636637962,
+        2.4304227209977847,
+        90.50200291110457
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 30,
+      "pitch_offset_deg": -10,
+      "pitch_axis_origin_world_mm": [
+        -8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        8.732667183414897,
+        5.041807749088,
+        89.19453199633357
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 30,
+      "pitch_offset_deg": 0,
+      "pitch_axis_origin_world_mm": [
+        -8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        12.99038105676658,
+        7.499999999999999,
+        87.0
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 30,
+      "pitch_offset_deg": 10,
+      "pitch_axis_origin_world_mm": [
+        -8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        16.853388775158404,
+        9.730308546095118,
+        83.98508666632566
+      ],
+      "intrusions": []
+    },
+    {
+      "yaw_offset_deg": 30,
+      "pitch_offset_deg": 20,
+      "pitch_axis_origin_world_mm": [
+        -8.999999999999998,
+        15.588457268119896,
+        60
+      ],
+      "pitch_axis_direction_world": [
+        -0.49999999999999994,
+        0.8660254037844387,
+        0
+      ],
+      "camera_envelope_centre_mm": [
+        20.20431480384325,
+        11.664966590790838,
+        80.24139861133449
+      ],
+      "intrusions": []
+    }
+  ],
+  "unresolved": [
+    "actual servo shaft offsets and horn planes",
+    "both horn-to-carrier fastener patterns and spline screws",
+    "positive pitch/yaw servo body retention",
+    "opposite-side pitch bearing and shaft load capacity",
+    "camera board retention and optical frame calibration",
+    "wire loops, connectors, pinch points and continuous swept-volume review",
+    "material, fabrication tolerances, load, fatigue and actual travel calibration"
+  ]
+}

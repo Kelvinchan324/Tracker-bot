@@ -24,8 +24,11 @@ Prices and procurement approval are not supplied. Quantities are per prototype.
 | R6 | 1 | 10k stop-contact pull-up | Open aux contact or broken wire -> logic high -> disarm | [Electrical review](../docs/power-and-interlock.md) |
 | R7 | 1 | 1k 0.25W motor-rail bleeder | Nominal 23mW at 4.8V; discharge timing must be measured | [Electrical review](../docs/power-and-interlock.md) |
 | C3 | 1 | 100nF ceramic / >=10V logic bypass | At TXU0102 pins 3 and 2 | [TI TXU0102 datasheet](https://www.ti.com/lit/ds/symlink/txu0102.pdf) |
-| H3 | 1 | Draft yaw servo seat (parametric printed candidate) | NOT fabrication approved; retention, fit and plate attachment unresolved | [Mechanical draft guide](../mechanical/README.md) |
-| H4 | 1 | Draft camera saddle (parametric printed candidate) | NOT fabrication approved; floating until pitch carrier is designed | [Mechanical draft guide](../mechanical/README.md) |
+| H3 | 1 | Draft yaw servo seat (parametric printed candidate) | NOT fabrication approved; retention/fit unresolved; candidate plate holes now supplied | [Mechanical draft guide](../mechanical/README.md) |
+| H4 | 1 | Draft camera saddle (parametric printed candidate) | NOT fabrication approved; rests on candidate pitch carrier; actual horn connection unresolved | [Mechanical draft guide](../mechanical/README.md) |
+| H5 | 1 | Candidate yaw-to-pitch carrier | Parametric draft; supplied-horn attachment and servo retention NOT defined | [Carrier and frame review](../mechanical/carrier-review.md) |
+| H6 | 1 | Candidate pitch-to-camera carrier | Parametric draft; pitch horn pattern and shaft load review unresolved | [Carrier and frame review](../mechanical/carrier-review.md) |
+| H7 | 4 | M3 candidate mount fastener sets | Two yaw-seat/plate plus two saddle/carrier joints; length, access and locking TBD | [Carrier and frame review](../mechanical/carrier-review.md) |
 | H1 | 4 | M3 fixture screw + nut + washer set | For plate holes; not servo screws | [Design rationale](../docs/engineering.md) |
 | H2 | 2 | Servo manufacturer horn and screw | Reuse supplied horn; do not guess spline or screw length | [Design rationale](../docs/engineering.md) |
 

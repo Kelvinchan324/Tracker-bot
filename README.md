@@ -29,9 +29,11 @@ people. The earlier product vision below describes future goals.
    Enter `serial` to return to manual target input. Use `status` for diagnostics.
 7. Follow the four lessons in the engineering manual and save the measured results.
 
-The CAD files contain component envelopes, a drilled base and two candidate mounts,
-not a finished pan/tilt mechanism. Use `python tools/build_engineering.py --cad`
-and `python tools/build_mounts.py` with CadQuery 2.8.0 to regenerate.
+The CAD now includes [candidate moving carriers and joint-frame review](mechanical/carrier-review.md),
+not a finished pan/tilt mechanism. Run `python tools/build_engineering.py --cad`,
+`python tools/build_mounts.py`, then `python tools/build_carriers.py` with CadQuery
+2.8.0. The last script samples 25 nominal poses and reports envelope intrusion;
+it does not certify continuous clearance or measured shaft/optical frames.
 Actual motor travel, bracket fit, camera orientation, back-feed,
 continuous current and tracking quality remain physical acceptance tests.
 

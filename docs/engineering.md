@@ -108,3 +108,7 @@ OV2640 and OV3660 board revisions require separate checks.
 
 The product draft is not finished until brackets/horn connections, current limits,
 sensor orientation, endurance and the user's desired target class have evidence.
+
+The [candidate carrier/frame lesson](../mechanical/carrier-review.md) now adds
+editable connecting solids, revised plate holes and 25 sampled pose checks. It
+does not replace the physical mechanical review or increase the commanded travel.
