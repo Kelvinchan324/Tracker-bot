@@ -87,3 +87,36 @@ No camera viewing ray or sensor protection zone is claimed.
 | Supported physical travel and stop test | pending |
 
 No physical result is inferred from the generated report.
+
+## Visual review and source freshness
+
+![Zero-pose carrier review from STEP parts](carrier-visual-review.png)
+
+The [render ledger](carrier-visual-review.json) identifies all 11 bodies and hashes
+its input STEP files, component manifest, frame parameters and rendering script.
+Candidate solids come from their individual STEP files; component boxes come
+from the manifest. Before rendering, each body is matched one-to-one with the
+saved assembly by volume (within 1e-4 mm3) and bounds (within 1e-4 mm). Matching
+these signatures does not prove topological identity or mechanical fit.
+
+The image has been visually inspected at zero pose. It shows the vertical stack,
+camera/controller envelope above the saddle, offset pitch plate and unresolved
+horn gaps. It is not a dimensioned manufacturing drawing: tessellation and
+translucent-surface depth ordering can obscure faces. Read the editable solids
+for geometry; do not measure clearances or hole locations from image pixels.
+The yaw axis is partly occluded by the carrier; its magenta origin and the frame
+table identify the assumption. No optical ray or actual shaft shape is invented.
+
+Reproduce with CadQuery 2.8.0 and Matplotlib 3.11.2:
+
+```sh
+python tools/render_carrier_review.py
+python -m unittest discover -s tests -p test_visual_review.py
+```
+
+The renderer reads existing geometry and does not modify STEP/STL sources. The
+lightweight CI test checks the committed image/ledger are current; it does not
+install CAD software or recompute solids. If source hashes change, regenerate
+and visually inspect the new image before committing. JSON/Python line endings
+are normalized for hashes; STEP/PNG retain native bytes. Renderer versions may
+change tessellation or pixels, so keep both the updated image and ledger.

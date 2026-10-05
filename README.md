@@ -47,6 +47,8 @@ through the next newline. Read the [serial controls lesson](docs/serial-controls
 before attaching scripts; stopping increments still holds PWM, not motor power.
 
 The CAD now includes [candidate moving carriers and joint-frame review](mechanical/carrier-review.md),
+with a [labelled STEP-derived assembly review](mechanical/carrier-visual-review.png)
+showing assumed actuator axes, camera envelope and unfinished horn connections,
 not a finished pan/tilt mechanism. Run `python tools/build_engineering.py --cad`,
 `python tools/build_mounts.py`, then `python tools/build_carriers.py` with CadQuery
 2.8.0. The last script samples 25 nominal poses and reports envelope intrusion;

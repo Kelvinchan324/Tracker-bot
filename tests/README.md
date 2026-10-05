@@ -56,3 +56,9 @@ axes, pivot/distance preservation, pitch-before-yaw composition and invalid inpu
 The optional CadQuery generator `python tools/build_carriers.py` performs local
 25-pose solid/envelope intrusion checks; it is not part of lightweight CI and
 does not establish continuous clearance or physical calibration.
+
+`python -m unittest discover -s tests -p test_visual_review.py` checks freshness
+of the committed visual review using source/image hashes and a PNG size check.
+It runs in CI without CadQuery. To regenerate after geometry changes, use
+`python tools/render_carrier_review.py` with CadQuery 2.8.0 and Matplotlib 3.11.2,
+then visually inspect the result. Hash agreement is not geometric/physical approval.

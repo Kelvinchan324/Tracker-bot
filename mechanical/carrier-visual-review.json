@@ -1,0 +1,185 @@
+{
+  "physical_validation": false,
+  "assembly_body_match": true,
+  "match_basis": "one-to-one volume within 1e-4 mm3 and bounds within 1e-4 mm",
+  "not_proven": [
+    "topological identity",
+    "clearance",
+    "physical fit",
+    "load capacity"
+  ],
+  "rendered_bodies": 11,
+  "parts": [
+    {
+      "name": "Fixture",
+      "triangles": 1548,
+      "volume_mm3": 31782.099133547006,
+      "bounds_signature": [
+        31782.099133547006,
+        -50.0,
+        50.0,
+        -40.0,
+        40.0,
+        0.0,
+        4.0
+      ]
+    },
+    {
+      "name": "Yaw seat",
+      "triangles": 596,
+      "volume_mm3": 4550.103986155627,
+      "bounds_signature": [
+        4550.103986155627,
+        -22.1,
+        22.1,
+        -9.7,
+        9.7,
+        4.0,
+        16.5
+      ]
+    },
+    {
+      "name": "Yaw carrier",
+      "triangles": 340,
+      "volume_mm3": 10354.092533012572,
+      "bounds_signature": [
+        10354.092533012572,
+        -22.0,
+        22.0,
+        -22.0,
+        22.0,
+        38.0,
+        59.9
+      ]
+    },
+    {
+      "name": "Pitch carrier",
+      "triangles": 748,
+      "volume_mm3": 6295.098338985382,
+      "bounds_signature": [
+        6295.098338985382,
+        -10.000000000000002,
+        40.0,
+        -18.0,
+        24.0,
+        50.0,
+        77.0
+      ]
+    },
+    {
+      "name": "Camera saddle",
+      "triangles": 580,
+      "volume_mm3": 4033.6039861556283,
+      "bounds_signature": [
+        4033.6039861556283,
+        -6.6,
+        36.6,
+        -12.6,
+        12.6,
+        77.0,
+        87.5
+      ]
+    },
+    {
+      "name": "U1 envelope",
+      "triangles": 12,
+      "volume_mm3": 5940.0,
+      "bounds_signature": [
+        5940.0,
+        4.0,
+        26.0,
+        -9.0,
+        9.0,
+        79.5,
+        94.5
+      ]
+    },
+    {
+      "name": "F1 envelope",
+      "triangles": 12,
+      "volume_mm3": 1399.9999999999998,
+      "bounds_signature": [
+        1399.9999999999998,
+        -43.0,
+        -29.0,
+        15.0,
+        25.0,
+        4.0,
+        14.0
+      ]
+    },
+    {
+      "name": "S1 envelope",
+      "triangles": 12,
+      "volume_mm3": 7200.0,
+      "bounds_signature": [
+        7200.0,
+        -42.0,
+        -22.0,
+        -29.0,
+        -11.0,
+        4.0,
+        24.0
+      ]
+    },
+    {
+      "name": "U2 envelope",
+      "triangles": 12,
+      "volume_mm3": 5400.0,
+      "bounds_signature": [
+        5400.0,
+        17.5,
+        42.5,
+        14.0,
+        32.0,
+        4.0,
+        16.0
+      ]
+    },
+    {
+      "name": "M1 envelope",
+      "triangles": 12,
+      "volume_mm3": 8137.4,
+      "bounds_signature": [
+        8137.4,
+        -11.5,
+        11.5,
+        -6.1,
+        6.1,
+        6.5,
+        35.5
+      ]
+    },
+    {
+      "name": "M2 envelope",
+      "triangles": 12,
+      "volume_mm3": 8137.399999999997,
+      "bounds_signature": [
+        8137.399999999997,
+        -11.5,
+        11.5,
+        -14.5,
+        14.5,
+        53.9,
+        66.1
+      ]
+    }
+  ],
+  "render_sha256": "7a02799a043be3ccfc7035af92d4e4b07929b4f636e248f37db5ddea33b969e7",
+  "generator_versions": {
+    "cadquery": "2.8.0",
+    "matplotlib": "3.11.2"
+  },
+  "hash_policy": "STEP/PNG native bytes; JSON/Python CRLF normalized to LF",
+  "sources_sha256": {
+    "mechanical/carrier-fixture-plate.step": "337bcbbe6034e1298c47b97045fb103bf69f1a1c77ee3e1b6727f0b6ee4cc299",
+    "mechanical/yaw-seat-draft.step": "48b044f92e949ad57aa0a9ca328cbba1366ba0f15f159e131f5d9afde084e846",
+    "mechanical/yaw-carrier-draft.step": "2b920d2c63903c71d71809f05ed6843d4c4017c46bd71a23f3b82f859a27c87d",
+    "mechanical/pitch-carrier-draft.step": "bb4c2dda2030cf6f484dd91e4bcd1d4606e04a9aaa26a6f88a817a3259197d09",
+    "mechanical/camera-saddle-draft.step": "757ec6c8c543909eaecd55980cc44091b22c41a85c8cf1359fb92264f2496386",
+    "mechanical/carrier-layout.step": "ca47c0fa1ee65fc51e9faf782a3560a53dea34dbb381a42d4c02f7ff361ab3fe",
+    "hardware/rev-a.json": "bc6441be178170f941b8ed98776a4dfcf200eb9f1c7e19b67c85575b5b4cedb8",
+    "mechanical/carrier-parameters.json": "c0a7d180dcc6f013931ad0ec27cff26ae9fc6f38cf15bc12240f30d036f8dfe1",
+    "tools/render_carrier_review.py": "b0ef64c35eef8f1308f6f1e47998fefd8cfeaa23c45ded322e51875439de0824"
+  }
+}
