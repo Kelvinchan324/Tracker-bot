@@ -1,0 +1,255 @@
+{
+  "title": "Tracker Bot EVT-A",
+  "cad_name": "Tracker_Bot_EVT_A",
+  "scope": "Bench red-marker tracker; XIAO Sense + two PWM servos. MCU USB and motor 4.8 V rails are separate. No production approval.",
+  "plate": [
+    100,
+    80,
+    4
+  ],
+  "fixture_holes": [
+    [
+      -43,
+      -33
+    ],
+    [
+      43,
+      -33
+    ],
+    [
+      -43,
+      33
+    ],
+    [
+      43,
+      33
+    ]
+  ],
+  "fixture_hole_d": 3.4,
+  "components": [
+    {
+      "ref": "U1",
+      "name": "XIAO ESP32-S3 Sense",
+      "qty": 1,
+      "selection": "Selected camera/controller; dimensions are clearance envelope",
+      "source": "[Seeed pin map](https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/)",
+      "pins": {
+        "USB": "USB_HOST",
+        "GND": "GND",
+        "D0 / GPIO1": "YAW_IN",
+        "D1 / GPIO2": "PITCH_IN"
+      },
+      "position": [
+        15,
+        0,
+        87
+      ],
+      "size": [
+        22,
+        18,
+        15
+      ]
+    },
+    {
+      "ref": "J1",
+      "name": "USB host / power cable",
+      "qty": 1,
+      "selection": "Prototype selection; bench verification required",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "USB": "USB_HOST",
+        "GND": "GND"
+      }
+    },
+    {
+      "ref": "P1",
+      "name": "Regulated 4.8 V motor supply",
+      "qty": 1,
+      "selection": "Set current limit 0.5 A initially; qualify up to 3 A",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "POS": "MOTOR_RAW",
+        "NEG": "GND"
+      }
+    },
+    {
+      "ref": "F1",
+      "name": "2 A fuse + holder",
+      "qty": 1,
+      "selection": "Initial fuse value; coordinate with measured inrush",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "IN": "MOTOR_RAW",
+        "OUT": "MOTOR_FUSED"
+      },
+      "position": [
+        -36,
+        20,
+        9
+      ],
+      "size": [
+        14,
+        10,
+        10
+      ]
+    },
+    {
+      "ref": "S1",
+      "name": "Latching DC power-cut switch",
+      "qty": 1,
+      "selection": "Contact DC rating >= 5 A at 5 V; not safety certified",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "COM": "MOTOR_FUSED",
+        "NC": "MOTOR_4V8"
+      },
+      "position": [
+        -32,
+        -20,
+        14
+      ],
+      "size": [
+        20,
+        18,
+        20
+      ]
+    },
+    {
+      "ref": "U2",
+      "name": "SN74AHCT125N DIP14 buffer",
+      "qty": 1,
+      "selection": "3.3 V input to 4.8 V servo PWM; DIP pin numbers",
+      "source": "[TI SN74AHCT125](https://www.ti.com/product/SN74AHCT125)",
+      "pins": {
+        "14 VCC": "MOTOR_4V8",
+        "7 GND": "GND",
+        "1 /1OE": "GND",
+        "2 1A": "YAW_IN",
+        "3 1Y": "YAW_PWM",
+        "4 /2OE": "GND",
+        "5 2A": "PITCH_IN",
+        "6 2Y": "PITCH_PWM",
+        "10 /3OE": "MOTOR_4V8",
+        "9 3A": "GND",
+        "8 3Y": "NC",
+        "13 /4OE": "MOTOR_4V8",
+        "12 4A": "GND",
+        "11 4Y": "NC"
+      },
+      "position": [
+        30,
+        23,
+        10
+      ],
+      "size": [
+        25,
+        13,
+        12
+      ]
+    },
+    {
+      "ref": "R1",
+      "name": "10k input pull-down",
+      "qty": 1,
+      "selection": "Prototype selection; bench verification required",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "1": "YAW_IN",
+        "2": "GND"
+      }
+    },
+    {
+      "ref": "R2",
+      "name": "10k input pull-down",
+      "qty": 1,
+      "selection": "Prototype selection; bench verification required",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "1": "PITCH_IN",
+        "2": "GND"
+      }
+    },
+    {
+      "ref": "C1",
+      "name": "100 nF ceramic / >=10 V",
+      "qty": 1,
+      "selection": "Prototype selection; bench verification required",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "1": "MOTOR_4V8",
+        "2": "GND"
+      }
+    },
+    {
+      "ref": "C2",
+      "name": "470 uF electrolytic / >=10 V",
+      "qty": 1,
+      "selection": "Observe polarity; near servo connectors",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {
+        "POS": "MOTOR_4V8",
+        "NEG": "GND"
+      }
+    },
+    {
+      "ref": "M1",
+      "name": "TowerPro SG90 yaw",
+      "qty": 1,
+      "selection": "Case envelope; shaft axis +Z, horn attachment TBD",
+      "source": "[TowerPro SG90](https://towerpro.com.tw/product/sg90-analog/)",
+      "pins": {
+        "V+": "MOTOR_4V8",
+        "GND": "GND",
+        "PWM": "YAW_PWM"
+      },
+      "position": [
+        0,
+        0,
+        21
+      ],
+      "size": [
+        23,
+        12.2,
+        29
+      ]
+    },
+    {
+      "ref": "M2",
+      "name": "TowerPro SG90 pitch",
+      "qty": 1,
+      "selection": "Rotated case envelope; shaft axis +Y, bracket TBD",
+      "source": "[TowerPro SG90](https://towerpro.com.tw/product/sg90-analog/)",
+      "pins": {
+        "V+": "MOTOR_4V8",
+        "GND": "GND",
+        "PWM": "PITCH_PWM"
+      },
+      "position": [
+        0,
+        0,
+        60
+      ],
+      "size": [
+        23,
+        29,
+        12.2
+      ]
+    },
+    {
+      "ref": "H1",
+      "name": "M3 fixture screw + nut + washer set",
+      "qty": 4,
+      "selection": "For plate holes; not servo screws",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {}
+    },
+    {
+      "ref": "H2",
+      "name": "Servo manufacturer horn and screw",
+      "qty": 2,
+      "selection": "Reuse supplied horn; do not guess spline or screw length",
+      "source": "[Design rationale](../docs/engineering.md)",
+      "pins": {}
+    }
+  ]
+}

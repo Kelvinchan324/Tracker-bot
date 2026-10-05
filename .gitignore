@@ -4,4 +4,7 @@
 .vscode/launch.json
 .vscode/ipch/
 *.log
+__pycache__/
+build/
+.pytest_cache/
 

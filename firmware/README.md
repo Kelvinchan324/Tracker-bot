@@ -1,76 +1,51 @@
-# Tracker Bot firmware
+# Tracker Bot firmware — EVT-A
 
-This directory is a basic PlatformIO project for an ESP32-S3. It provides a
-safe starting point for testing yaw and pitch with two PWM hobby servos before
-the final camera, AI model, and actuator hardware are selected.
+Experimental two-axis servo firmware with a red-marker camera path.
+It has compiled for both boards below; physical operation is not validated.
+Read the [engineering build and teaching manual](../docs/engineering.md) before
+wiring or uploading. This is not brushless-gimbal firmware or person recognition.
 
-## What works now
+| Environment | Board | Yaw / pitch | Camera |
+| --- | --- | --- | --- |
+| `xiao-sense` (default) | XIAO ESP32-S3 Sense | GPIO1 / GPIO2 | RGB565 red-marker centroid |
+| `esp32-s3-devkitc-1` | ESP32-S3 DevKitC-1 | GPIO4 / GPIO5 | Serial targets only |
 
-- two-axis PWM servo output;
-- configurable pins, travel limits, center positions, and control gains;
-- normalized target-error input (`-1.0` to `+1.0`);
-- deadband to reduce servo hunting;
-- automatic stop when target updates time out;
-- USB serial commands for testing without a camera.
+## Build and upload
 
-This version does **not** yet contain camera capture or AI inference. It also
-does not directly drive a brushless gimbal motor. A gimbal motor requires its
-specific driver, feedback sensor, and control protocol.
+Install PlatformIO Core or the PlatformIO extension in VS Code. Open this folder.
+Run `pio run` to compile the default board. Only after wiring review, use
+`pio run -t upload` and `pio device monitor` (115200 baud).
+Choose the other target explicitly with `-e esp32-s3-devkitc-1`.
 
-## Open in VS Code
+## Supported bench sequence
 
-1. Install [Visual Studio Code](https://code.visualstudio.com/).
-2. Install the **PlatformIO IDE** extension.
-3. In PlatformIO, choose **Open Project** and select this `firmware` folder.
-4. Wait for PlatformIO to install the ESP32 toolchain.
-5. Build the `esp32-s3-devkitc-1` environment.
+Start with horns removed, mechanism restrained, current-limited motor supply
+and a reachable physical power cut. USB powers the MCU, not the motors.
+Use the buffer and separate regulated motor supply in the
+[module schematic](../hardware/schematic.svg); do not connect motors to 3.3 V.
 
-If your board is not an ESP32-S3 DevKitC-1, change `board` in
-`platformio.ini` to the exact PlatformIO board identifier.
-
-## Wiring for the first bench test
-
-| Signal | Default pin |
-| --- | --- |
-| Yaw servo PWM | GPIO 4 |
-| Pitch servo PWM | GPIO 5 |
-
-Power the motors from a suitable external supply. Connect the motor-supply
-ground to ESP32 ground. Do not power motors from the ESP32 3.3 V pin, and do
-not attach the camera mechanism until direction and travel limits have been
-verified with the servos unloaded.
-
-Pins and motion settings are in `include/app_config.h`. The defaults are only
-placeholders because the final ESP32 camera board and motor hardware have not
-been chosen.
-
-## Test through the serial monitor
-
-Upload the firmware, open the PlatformIO serial monitor at 115200 baud, and
-send commands ending with a newline:
+Send newline-terminated commands:
 
 ```text
-help
 status
-target 0.35 -0.20
-center
+arm
+target 0.2 0
 stop
+center
+camera
+stop
+disarm
 ```
 
-For `target x y`, negative/positive `x` means left/right and negative/positive
-`y` means up/down. If an installed axis moves away from the target, reverse
-that axis sign in `TrackerController::tick()` before further testing.
+- Boot is disarmed; `arm` applies the last commanded position (initially centre).
+- `target x y` accepts finite values in [-1,1], in armed serial mode only.
+  Negative x/y means left/up. Actual installed directions need a hardware check.
+- Targets expire after 750 ms; the last pulse is held. There is no encoder feedback.
+- `camera` enables marker input if capture initialized; it does not arm motors.
+- `serial`, `stop` and `center` leave camera tracking; `center` needs arming.
+- `disarm` removes PWM but is not a physical power cut; support the payload.
+- `status` reports arming, input mode, camera state, commanded angles and target.
+- Pins, ranges, deadband and gain are in `include/app_config.h`.
 
-Target commands need to arrive at least once every 750 ms. Otherwise motion
-stops automatically. This simulates the safety behavior needed when the vision
-system loses its target.
-
-## Suggested next milestones
-
-1. Confirm the exact ESP32-S3 camera board and its occupied pins.
-2. Confirm whether the prototype uses PWM servos or closed-loop gimbal motors.
-3. Bench-test direction, center, current draw, and mechanical travel.
-4. Add camera capture and output normalized target coordinates.
-5. Integrate a lightweight detector only after camera capture is stable.
-6. Add a hardware emergency stop, calibration, and stall protection.
-
+Use [host logic tests](../tests/README.md) and compile both environments after
+changes. Neither compilation nor mocked tests proves electrical or mechanical safety.

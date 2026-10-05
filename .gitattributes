@@ -1,0 +1,3 @@
+# CAD exports preserve their native bytes; exporter line padding is intentional.
+*.step -text whitespace=-blank-at-eol
+*.stl binary

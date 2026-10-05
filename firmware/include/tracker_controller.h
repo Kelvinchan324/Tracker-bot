@@ -9,6 +9,9 @@ class TrackerController {
   TrackerController(ServoAxis& yaw, ServoAxis& pitch);
 
   void begin();
+  void arm();
+  void disarm();
+  bool isArmed() const { return armed_; }
   void updateTarget(float horizontalError, float verticalError,
                     uint32_t timestampMs);
   void stopTracking();
@@ -24,5 +27,6 @@ class TrackerController {
   uint32_t lastTargetMs_ = 0;
   uint32_t lastControlMs_ = 0;
   bool tracking_ = false;
+  bool armed_ = false;
 };
 

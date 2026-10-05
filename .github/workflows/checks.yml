@@ -1,0 +1,18 @@
+name: Engineering checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install platformio==6.2.0
+      - run: g++ -std=c++17 -Itests/native -Ifirmware/include tests/native/test_control.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/tracker-tests
+      - run: /tmp/tracker-tests
+      - run: python tools/build_engineering.py
+      - run: git diff --exit-code -- hardware/BOM.md hardware/schematic.svg mechanical/placements.json mechanical/placement.svg
+      - run: pio run -d firmware -e xiao-sense -e esp32-s3-devkitc-1

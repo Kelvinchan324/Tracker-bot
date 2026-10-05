@@ -1,6 +1,7 @@
 #include "servo_axis.h"
 
 #include "app_config.h"
+#include <math.h>
 
 namespace {
 
@@ -27,10 +28,14 @@ void ServoAxis::begin() {
   ledcSetup(channel_, config::kServoPwmFrequencyHz,
             config::kServoPwmResolutionBits);
   ledcAttachPin(pin_, channel_);
-  center();
+  disable();
 }
 
+void ServoAxis::enable() { enabled_ = true; setAngle(angleDeg_); }
+void ServoAxis::disable() { enabled_ = false; ledcWrite(channel_, 0); }
+
 void ServoAxis::setAngle(float angleDeg) {
+  if (!enabled_ || !isfinite(angleDeg)) return;
   angleDeg_ = constrain(angleDeg, minimumDeg_, maximumDeg_);
   const float fraction = angleDeg_ / 180.0F;
   const uint16_t pulseUs = static_cast<uint16_t>(

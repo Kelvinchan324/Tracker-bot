@@ -24,10 +24,30 @@ void TrackerController::begin() {
 void TrackerController::updateTarget(float horizontalError,
                                      float verticalError,
                                      uint32_t timestampMs) {
+  if (!armed_ || !isfinite(horizontalError) || !isfinite(verticalError) ||
+      fabsf(horizontalError) > 1.0F || fabsf(verticalError) > 1.0F) {
+    stopTracking();
+    return;
+  }
   horizontalError_ = constrain(horizontalError, -1.0F, 1.0F);
   verticalError_ = constrain(verticalError, -1.0F, 1.0F);
   lastTargetMs_ = timestampMs;
   tracking_ = true;
+}
+
+void TrackerController::arm() {
+  stopTracking();
+  lastControlMs_ = millis();
+  yaw_.enable();
+  pitch_.enable();
+  armed_ = true;
+}
+
+void TrackerController::disarm() {
+  stopTracking();
+  armed_ = false;
+  yaw_.disable();
+  pitch_.disable();
 }
 
 void TrackerController::stopTracking() {
@@ -37,13 +57,14 @@ void TrackerController::stopTracking() {
 }
 
 void TrackerController::center() {
+  if (!armed_) return;
   stopTracking();
   yaw_.center();
   pitch_.center();
 }
 
 bool TrackerController::hasTarget(uint32_t nowMs) const {
-  return tracking_ && (nowMs - lastTargetMs_ <= config::kTargetTimeoutMs);
+  return armed_ && tracking_ && (nowMs - lastTargetMs_ <= config::kTargetTimeoutMs);
 }
 
 void TrackerController::tick(uint32_t nowMs) {
@@ -51,7 +72,8 @@ void TrackerController::tick(uint32_t nowMs) {
     return;
   }
 
-  const float elapsedSeconds = (nowMs - lastControlMs_) / 1000.0F;
+  // Never turn a stalled event loop into a large catch-up movement.
+  const float elapsedSeconds = min(nowMs - lastControlMs_, uint32_t(40)) / 1000.0F;
   lastControlMs_ = nowMs;
 
   if (!hasTarget(nowMs)) {

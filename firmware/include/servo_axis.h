@@ -8,6 +8,8 @@ class ServoAxis {
             float maximumDeg);
 
   void begin();
+  void enable();
+  void disable();
   void setAngle(float angleDeg);
   void moveBy(float deltaDeg);
   void center();
@@ -20,5 +22,6 @@ class ServoAxis {
   float centerDeg_;
   float maximumDeg_;
   float angleDeg_;
+  bool enabled_ = false;
 };
 
