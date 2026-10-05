@@ -2,6 +2,7 @@
 #include <math.h>
 #include "camera_target.h"
 #include "camera_frame.h"
+#include "camera_stream.h"
 
 #include "app_config.h"
 #include "servo_axis.h"
@@ -19,6 +20,7 @@ TrackerController tracker(yawAxis, pitchAxis);
 SerialLineBuffer serialInput;
 bool cameraReady = false;
 bool cameraMode = false;
+CameraStreamMonitor cameraStream(config::kTargetTimeoutMs);
 CameraTarget lastCameraTarget{false, 0, 0, 0, 0, CameraFrameState::NoFrame, 0, 0};
 
 void printHelp() {
@@ -42,6 +44,7 @@ void printStatus() {
                 cameraReady ? "ready" : "unavailable", yawAxis.angle(),
                 pitchAxis.angle(), tracker.hasTarget(millis()) ? "yes" : "no");
   Serial.printf("stop_contact=%s\n", tracker.interlockClosed() ? "closed" : "OPEN: arm inhibited");
+  Serial.printf("camera_stream=%s\n", cameraReady ? cameraStream.state(millis()) : "unavailable");
   Serial.printf("last_frame=%s, red_samples=%lu, candidates=%u, selected_samples=%lu",
                 cameraFrameStateName(lastCameraTarget.state),
                 static_cast<unsigned long>(lastCameraTarget.pixels),
@@ -57,7 +60,8 @@ void printStatus() {
 
 void handleCommand(const char* line) {
   const auto command = parseSerialCommand(line);
-  const char* message = applySerialCommand(command, tracker, cameraMode, cameraReady,
+  const char* message = applySerialCommand(command, tracker, cameraMode,
+      cameraReady && cameraStream.usable(millis()),
       digitalRead(config::kStopSensePin) == LOW, millis());
   if (message) Serial.println(message);
   if (command.kind == CommandKind::Status) printStatus();
@@ -94,15 +98,24 @@ void loop() {
   const bool stopClosed = digitalRead(config::kStopSensePin) == LOW;
   tracker.setInterlockClosed(stopClosed);
   if (!stopClosed) cameraMode = false;
-  readSerialCommands();
   CameraTarget target{};
-  if (readCameraTarget(target)) {
+  const bool received = readCameraTarget(target);
+  if (received) {
     lastCameraTarget = target;
-    if (cameraMode) {
-      if (target.found && millis() - target.timestamp <= config::kTargetTimeoutMs)
-        tracker.updateTarget(target.x, target.y, target.timestamp);
-      else tracker.stopTracking();
-    }
+    cameraStream.observe(target, millis());
+  }
+  // Poll health before commands: camera selection needs a currently fresh image,
+  // not merely successful initialization at boot.
+  if (cameraMode && !cameraStream.usable(millis())) {
+    cameraMode = false;
+    tracker.stopTracking();
+    Serial.println("Camera stream fault: tracking stopped; PWM held. Fresh frames + camera required");
+  }
+  readSerialCommands();
+  if (received && cameraMode) {
+    if (target.found && millis() - target.timestamp <= config::kTargetTimeoutMs)
+      tracker.updateTarget(target.x, target.y, target.timestamp);
+    else tracker.stopTracking();
   }
   tracker.tick(millis());
 

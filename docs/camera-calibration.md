@@ -43,19 +43,45 @@ timing on either sensor revision; verify with the actual board.
 | Observation | Control response while armed in camera mode |
 | --- | --- |
 | Fresh valid marker | Bounded incremental targets; no encoder feedback |
-| Delivered invalid/stale/no-marker/ambiguous/no-frame result | Stop new increments; keep last PWM |
-| Capture task stalls or queue stays silent | Last capture-based target expires; keep last PWM |
-| Fresh marker returns | Tracking automatically resumes while camera mode remains selected |
+| Fresh no-marker/ambiguous image | Stop new increments; keep last PWM and camera mode |
+| Delivered invalid/stale/no-frame result | Stop increments, exit camera mode; keep last PWM |
+| Capture age exceeds 750 ms, including silent/stalled capture | Stop increments, exit camera mode; keep last PWM |
+| Fresh marker after ordinary marker loss | Automatically resumes only while camera mode remains selected |
+| Fresh image after stream fault | Stream becomes live, but tracking stays off until explicit `camera` selection |
 | `stop` or `serial` | Exit camera mode and stop tracking increments |
 | `disarm` or open auxiliary stop contact | Disable PWM/OE; payload may fall; physical power cut still required |
 
 `status` prints `last_frame`, `red_samples` (all red samples), `candidates`
 (regions with at least 20 samples), `selected_samples` (accepted region only,
 zero when none/ambiguous), and (where a timestamp is valid)
-`capture_age_ms`. An old `marker` label can persist after a task hangs: it means
-last received result, not a continuously healthy camera. Check age and `target`.
+`capture_age_ms`. `camera_stream` reports `waiting`, `live`, `no-frame`,
+`invalid-frame`, `stale-frame` or `timed-out` (`unavailable` if capture setup failed).
+An old `marker` label can persist after a task hangs: it means last received
+result, not a continuously healthy camera. Check stream, age, input and target.
 Camera processing remains active in serial/disarmed modes; no network upload is
 implemented. `stop` is not a camera privacy shutter or motor-power isolation.
+
+### Stream-fault recovery exercise (no motors connected)
+
+Run the actual-main-loop native test in [tests/README.md](../tests/README.md).
+It scripts camera queues/time without touching a physical board:
+
+1. Camera initialization alone must not permit camera mode: no fresh image yet.
+2. A marker captured at 520 ms remains eligible through 1270 ms, not 1271 ms.
+   Receipt of an old image never extends its capture lifetime. At expiry the
+   application exits camera mode but keeps its armed/held-PWM state.
+3. A fresh marker after the fault updates stream health but does not resume
+   tracking. An explicit `camera` command selects the recovered stream; motion
+   requires a newly delivered valid marker and separately armed motors.
+4. Contrast fresh no-marker/ambiguous images: these keep the stream live and
+   allow ordinary reacquisition. Test a stop-contact opening and clock rollover.
+
+This is a **main-loop freshness gate**, not an independent watchdog or fault-
+tolerant controller. Frozen MCU/main loop, blocked serial output, real queue
+scheduling and PWM electronics remain untested. There is no camera-task restart,
+motor-power removal or encoder confirmation. Serial target mode stays independent
+of camera health. Do not hot-unplug a camera flex cable to induce a fault; physical
+fault injection requires a reviewed, de-energized setup and separate test plan.
 
 ## Connected-region exercise (motors disconnected)
 

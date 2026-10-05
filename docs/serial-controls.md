@@ -17,7 +17,7 @@ lines from the serial monitor rather than slowly typing raw terminal characters.
 | --- | --- |
 | `arm` | Closed auxiliary stop contact required; applies stored position and may move abruptly |
 | `disarm` | Exit camera mode; disable PWM/OE; payload can fall; does not physically isolate power |
-| `camera` | Select initialized red-marker input; does not arm |
+| `camera` | Select initialized red-marker input only with `camera_stream=live`; does not arm |
 | `serial` | Exit camera tracking and stop increments |
 | `target x y` | Exactly two finite decimal/scientific numbers in [-1,1]; armed serial mode only |
 | `center` | Exit camera mode and command center when armed; not a gradual trajectory |

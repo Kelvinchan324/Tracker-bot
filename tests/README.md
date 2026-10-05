@@ -50,6 +50,21 @@ wrong input mode, interlock precedence, PWM hold versus disable, 96/97-byte
 boundaries, NUL/non-ASCII rejection, CRLF, timeout/recovery and clock rollover.
 The full UART/USB driver and main-loop scheduling are not simulated by this test.
 
+The camera-stream test includes production `main.cpp` and the real controller /
+servo code, with scripted serial input, queued camera results, GPIO and time:
+
+```sh
+c++ -std=c++17 -Wall -Wextra -Werror -Itests/native -Ifirmware/include tests/native/test_camera_stream.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/camera-stream-tests
+/tmp/camera-stream-tests
+```
+
+It checks startup without images, exact 750/751 ms capture-age boundaries,
+future/old receipt timestamps, task silence, invalid/no-frame/stale results,
+explicit reselection after stream recovery, normal marker-loss/ambiguity recovery,
+one-time fault reporting, held PWM, serial-mode independence, stop contact,
+disarmed selection and timer rollover. This tests loop ordering, not real FreeRTOS
+scheduling, blocked drivers, a frozen MCU, camera restart or electrical stopping.
+
 Coordinate math tests (standard-library Python, also in CI):
 `python -m unittest discover -s tests -p test_frames.py`. These check right-handed
 axes, pivot/distance preservation, pitch-before-yaw composition and invalid inputs.

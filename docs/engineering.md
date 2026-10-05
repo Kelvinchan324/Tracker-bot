@@ -98,8 +98,11 @@ OV2640 and OV3660 board revisions require separate checks.
 The [camera calibration lesson](camera-calibration.md) specifies frame metadata,
 capture-age checks and the unfilled bench worksheet. Expiry is measured from
 capture start, including queue time; it is not renewed when a frame is retrieved.
-Camera mode automatically accepts a fresh marker after loss unless explicitly
-exited. This is not person identity tracking or an independently supervised stop.
+Fresh no-marker/ambiguous images permit ordinary automatic reacquisition while
+camera mode remains selected. Invalid/missing/stale frames or a capture age over
+750 ms now exit camera mode and hold PWM. After recovery, `camera_stream=live`
+and an explicit `camera` command are required to select marker input again.
+This is not person identity tracking or an independently supervised stop.
 
 ## Teaching sequence and acceptance evidence
 

@@ -62,20 +62,27 @@ disarm
   RGB565 frames with valid, nonfuture timestamps within 750 ms are processed;
   queue/processing time does not refresh their age. Controller input also rejects
   stale/future timestamps. At the exact 750 ms boundary a target is still eligible.
-- `camera` enables marker input if capture initialized; it does not arm motors.
+- `camera` enables marker input only after capture initialized AND a valid image
+  is currently fresh (`camera_stream=live`). It does not arm motors.
 - Exactly one four-connected red region with at least 20 sampled pixels is
   required. Multiple qualifying regions report `ambiguous`; disconnected smaller
   speckles are excluded from the centroid. Touching objects/red bridges can merge;
   no identity lock, shape test or upper-area rejection is implemented.
-- Missing/invalid/no-marker/ambiguous frames stop increments when delivered; a stalled
-  camera task receives no new observations and the last target expires. Camera
-  mode stays selected, so a valid marker can resume tracking automatically.
+- Fresh no-marker/ambiguous images stop increments but retain camera mode; a
+  subsequent unique marker can resume tracking automatically.
+- Missing/invalid/stale frame results or capture age over 750 ms stop increments
+  AND exit camera mode. Fresh images alone do not resume motion after this fault:
+  inspect the issue, wait for `camera_stream=live`, then explicitly send `camera`.
+  Arming is unchanged and the last PWM stays held; this is not power isolation.
 - `serial`, `stop` and `center` leave camera tracking; `center` needs arming.
 - `disarm` removes PWM but is not a physical power cut; support the payload.
 - `status` reports arming, input mode, camera state, commanded angles and target.
-- `last_frame` is the most recently received frame result, not camera health.
-  Check `capture_age_ms` and `target` as well: a hung task can leave an old
-  `marker` label. `red_samples` counts every-other-row/column samples, not area.
+- `camera_stream` reports waiting/live/no-frame/invalid-frame/stale-frame/timed-out,
+  or unavailable when capture did not initialize. Freshness uses capture time,
+  not queue receipt. `last_frame` is historical; a hung task can leave an old
+  `marker` label while the stream is timed-out. A running main loop is required
+  to detect this; no independent task/MCU watchdog or restart is implemented.
+- `red_samples` counts every-other-row/column samples, not area.
 - Pins, ranges, deadband and gain are in `include/app_config.h`.
 
 Use [host logic tests](../tests/README.md) and compile both environments after

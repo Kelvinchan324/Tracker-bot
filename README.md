@@ -35,10 +35,13 @@ before marker tracking. Frame age is measured from capture start, not retrieval.
 counts and capture age. Two separate qualifying red regions now reject as
 `ambiguous`; a unique region needs at least 20 connected samples. Touching objects
 can still merge, and a lone distractor can still qualify—this is not identity tracking.
-Loss stops incremental commands but holds PWM; a valid marker can automatically
-resume tracking while camera mode remains selected. Use `stop`, `serial` or
-`disarm` to prevent that automatic resumption. No encoder or obstruction sensor
-is implemented, and physical stopping remains unvalidated.
+Fresh images without a unique marker stop incremental commands but hold PWM;
+normal marker reacquisition remains automatic while camera mode is selected.
+Camera-stream faults (missing/invalid/stale frames or age over 750 ms) now exit
+camera mode. Fresh frames alone cannot restart it: inspect the fault, wait for
+`camera_stream=live`, then send `camera` explicitly. This main-loop check is not
+an independent watchdog or power cut. No encoder or obstruction sensor is
+implemented, and physical stopping remains unvalidated.
 
 Serial control now rejects malformed or unknown commands by stopping tracking
 and leaving camera mode. Lines are limited to 96 ASCII bytes and must finish
