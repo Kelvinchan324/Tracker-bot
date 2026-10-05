@@ -6,6 +6,7 @@
 #include "app_config.h"
 #include "servo_axis.h"
 #include "tracker_controller.h"
+#include "serial_command.h"
 
 ServoAxis yawAxis(config::kYawServoPin, config::kYawPwmChannel,
                   config::kYawMinDeg, config::kYawCenterDeg,
@@ -15,8 +16,7 @@ ServoAxis pitchAxis(config::kPitchServoPin, config::kPitchPwmChannel,
                     config::kPitchMaxDeg);
 TrackerController tracker(yawAxis, pitchAxis);
 
-String serialLine;
-bool serialOverflow = false;
+SerialLineBuffer serialInput;
 bool cameraReady = false;
 bool cameraMode = false;
 CameraTarget lastCameraTarget{false, 0, 0, 0, 0, CameraFrameState::NoFrame};
@@ -33,6 +33,7 @@ void printHelp() {
   Serial.println("  status          print current state");
   Serial.println("  help            show this message");
   Serial.println("Example: target 0.35 -0.20");
+  Serial.println("ASCII lines: max 96 bytes; finish within 1 s; invalid input stops tracking, not PWM");
 }
 
 void printStatus() {
@@ -50,81 +51,28 @@ void printStatus() {
   Serial.println();
 }
 
-void handleCommand(String command) {
-  command.trim();
+void handleCommand(const char* line) {
+  const auto command = parseSerialCommand(line);
+  const char* message = applySerialCommand(command, tracker, cameraMode, cameraReady,
+      digitalRead(config::kStopSensePin) == LOW, millis());
+  if (message) Serial.println(message);
+  if (command.kind == CommandKind::Status) printStatus();
+  if (command.kind == CommandKind::Help) printHelp();
+}
 
-  if (command == "arm") {
-    tracker.setInterlockClosed(digitalRead(config::kStopSensePin) == LOW);
-    tracker.arm();
-    Serial.println(tracker.isArmed() ? "Armed: last commanded position applied" : "Blocked: stop contact open");
-    return;
-  }
-  if (command == "disarm") { cameraMode = false; tracker.disarm(); return; }
-  if (command == "camera") {
-    tracker.stopTracking();
-    cameraMode = cameraReady;
-    Serial.println(cameraMode ? "Red marker camera mode" : "Camera unavailable");
-    return;
-  }
-  if (command == "serial") { cameraMode = false; tracker.stopTracking(); return; }
-
-  if (command.equalsIgnoreCase("center")) {
-    cameraMode = false;
-    tracker.center();
-    Serial.println(tracker.isArmed() ? "Center commanded; serial mode" : "Ignored: disarmed");
-    return;
-  }
-
-  if (command.equalsIgnoreCase("stop")) {
-    cameraMode = false;
-    tracker.stopTracking();
-    Serial.println("Tracking stopped");
-    return;
-  }
-
-  if (command.equalsIgnoreCase("status")) {
-    printStatus();
-    return;
-  }
-
-  if (command.equalsIgnoreCase("help")) {
-    printHelp();
-    return;
-  }
-
-  float x = 0.0F;
-  float y = 0.0F;
-  char extra = 0;
-  if (sscanf(command.c_str(), "target %f %f %c", &x, &y, &extra) == 2 &&
-      isfinite(x) && isfinite(y) && fabsf(x) <= 1 && fabsf(y) <= 1 &&
-      tracker.isArmed() && !cameraMode) {
-    tracker.updateTarget(x, y, millis());
-    Serial.printf("Target updated: x=%.2f, y=%.2f\n", x, y);
-    return;
-  }
-
-  Serial.println("Unknown command. Type 'help'.");
+void rejectSerialLine() {
+  cameraMode = false; tracker.stopTracking();
+  Serial.println("Invalid or expired line: tracking stopped; send newline then a new command");
 }
 
 void readSerialCommands() {
   // Bound serial work so a continuous input stream cannot starve the stop check.
+  if (serialInput.expire(millis())) rejectSerialLine();
   uint16_t consumed = 0;
   while (Serial.available() > 0 && consumed++ < 128) {
-    const char character = static_cast<char>(Serial.read());
-    if (character == '\n' || character == '\r') {
-      if (!serialOverflow && !serialLine.isEmpty()) {
-        handleCommand(serialLine);
-      }
-      serialLine = "";
-      serialOverflow = false;
-    } else if (!serialOverflow && serialLine.length() < 96) {
-      serialLine += character;
-    } else {
-      serialOverflow = true;
-      serialLine = "";
-      cameraMode = false;
-      tracker.stopTracking();
-    }
+    const auto event = serialInput.push(static_cast<uint8_t>(Serial.read()), millis());
+    if (event == LineEvent::Complete) handleCommand(serialInput.line());
+    if (event == LineEvent::Rejected) rejectSerialLine();
   }
 }
 

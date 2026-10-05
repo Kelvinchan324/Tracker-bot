@@ -14,6 +14,8 @@ jobs:
       - run: python -m unittest discover -s tests -p test_frames.py
       - run: g++ -std=c++17 -Itests/native -Ifirmware/include tests/native/test_control.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/tracker-tests
       - run: /tmp/tracker-tests
+      - run: g++ -std=c++17 -Wall -Wextra -Werror -Itests/native -Ifirmware/include tests/native/test_serial.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/serial-tests
+      - run: /tmp/serial-tests
       - run: python tools/build_engineering.py
       - run: git diff --exit-code -- hardware/BOM.md hardware/schematic.svg mechanical/placements.json mechanical/placement.svg
       - run: pio run -d firmware -e xiao-sense -e esp32-s3-devkitc-1

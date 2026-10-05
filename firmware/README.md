@@ -48,6 +48,15 @@ disarm
   is not detected: disarm before reconnecting power.
 - `target x y` accepts finite values in [-1,1], in armed serial mode only.
   Negative x/y means left/up. Actual installed directions need a hardware check.
+- Commands are case-insensitive ASCII words, with exactly their documented
+  arguments. Decimal/scientific numbers are accepted; NaN, infinity, hexadecimal,
+  comma decimals and trailing tokens are rejected. A malformed/unknown command
+  stops increments and exits camera mode, while holding the last PWM.
+- Target commands in the wrong mode are rejected and stop tracking/leave camera
+  mode; they never arm implicitly. Select the mode deliberately before retrying.
+- Maximum line length is 96 bytes excluding CR/LF; send the complete line within
+  one second. Oversized, non-text or expired partial lines are discarded through
+  the next CR/LF. Send a newline followed by a fresh command to recover.
 - Targets expire after 750 ms; the last pulse is held. There is no encoder feedback.
 - Camera targets retain the capture-start timestamp. Only complete 160x120
   RGB565 frames with valid, nonfuture timestamps within 750 ms are processed;
@@ -69,3 +78,5 @@ Use [host logic tests](../tests/README.md) and compile both environments after
 changes. Neither compilation nor mocked tests proves electrical or mechanical safety.
 
 Complete the [camera identification, polarity and latency worksheet](../docs/camera-calibration.md).
+The [serial lesson](../docs/serial-controls.md) includes grammar, failure behavior
+and a motors-disconnected test sequence. A software input check is not an E-stop.

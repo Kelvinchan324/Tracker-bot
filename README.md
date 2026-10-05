@@ -37,6 +37,12 @@ resume tracking while camera mode remains selected. Use `stop`, `serial` or
 `disarm` to prevent that automatic resumption. No encoder or obstruction sensor
 is implemented, and physical stopping remains unvalidated.
 
+Serial control now rejects malformed or unknown commands by stopping tracking
+and leaving camera mode. Lines are limited to 96 ASCII bytes and must finish
+within one second of their first processed byte. Rejected lines are discarded
+through the next newline. Read the [serial controls lesson](docs/serial-controls.md)
+before attaching scripts; stopping increments still holds PWM, not motor power.
+
 The CAD now includes [candidate moving carriers and joint-frame review](mechanical/carrier-review.md),
 not a finished pan/tilt mechanism. Run `python tools/build_engineering.py --cad`,
 `python tools/build_mounts.py`, then `python tools/build_carriers.py` with CadQuery

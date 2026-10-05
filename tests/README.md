@@ -22,6 +22,19 @@ green/white rejection and original capture timestamp preservation into control.
 Camera metadata and GPIO/time are synthetic; FreeRTOS scheduling, actual DMA
 buffers, byte order, sensor output and PWM are not exercised on hardware.
 
+Run the production serial parser, fixed line buffer and command effects against
+the real controller/servo sources and host shim:
+
+```sh
+c++ -std=c++17 -Wall -Wextra -Werror -Itests/native -Ifirmware/include tests/native/test_serial.cpp firmware/src/tracker_controller.cpp firmware/src/servo_axis.cpp -o /tmp/serial-tests
+/tmp/serial-tests
+```
+
+Cases include strict argument counts/numeric grammar, invalid-input cancellation,
+wrong input mode, interlock precedence, PWM hold versus disable, 96/97-byte
+boundaries, NUL/non-ASCII rejection, CRLF, timeout/recovery and clock rollover.
+The full UART/USB driver and main-loop scheduling are not simulated by this test.
+
 Coordinate math tests (standard-library Python, also in CI):
 `python -m unittest discover -s tests -p test_frames.py`. These check right-handed
 axes, pivot/distance preservation, pitch-before-yaw composition and invalid inputs.
