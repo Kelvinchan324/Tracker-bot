@@ -1,6 +1,6 @@
 # Tracker Bot EVT-A engineering draft
 
-Revision A chooses a small, wired desk demonstrator: XIAO ESP32-S3 Sense,
+Revision A.1 chooses a small, wired desk demonstrator: XIAO ESP32-S3 Sense,
 two SG90 hobby servos, a separate regulated 4.8 V motor supply and a bright red
 marker. It implements an experimental camera-to-motion path; person recognition, quiet
 gimbal actuation, battery operation and a consumer enclosure remain future work.
@@ -18,6 +18,8 @@ The STEP assembly contains labelled component bounding boxes and a drilled fixtu
 plate. It is a packaging study, not accurate servo internals, a finished pan/tilt
 mechanism or print-approved parts. Hole locations on the plate are for fixture
 attachment only. Horn centres, spline, screws and moving brackets are not released.
+Two [parametric mounting candidates](../mechanical/README.md) add a yaw-body
+seat and camera saddle. They do not yet connect through a rotating carrier.
 
 ## Electrical rationale
 
@@ -27,17 +29,18 @@ at the motor connector. Never route servo supply current through XIAO pins,
 USB ground jumpers or solderless breadboard contacts. Use short adequately rated
 power leads, keyed connectors, strain relief and insulated terminations.
 
-U2 translates GPIO1/D0 and GPIO2/D1 into servo PWM using AHCT input thresholds.
-Its DIP14 pin numbers are in the schematic. Place C1 at pins 14/7 and C2 close to
-the servo connectors. Unused inputs are grounded; their enables are inactive.
-R1/R2 pull the two inputs low while the MCU boots. Check power sequencing:
-with motor power cut, MCU signal paths must not back-power the motor rail.
-The present circuit needs a measured back-feed check before powered assembly.
+U2 is now a TXU0102 dual-supply translator, not the previous AHCT125.
+VCCA receives MCU 3.3 V and VCCB receives switched motor power; grounds are common.
+The [power and interlock review](power-and-interlock.md) gives the IC pin mapping,
+pull resistors, two-rail bypass capacitors, wiring schedule and power-state tests.
+Do not reuse the previous DIP14 wiring. The new part is VSSOP8 and needs a
+verified breakout. This is signal isolation on power-off, not galvanic isolation.
+Hardware back-feed, timing and fault tests remain mandatory.
 
 Source facts: [Seeed pin map](https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/),
 [Seeed camera guide](https://wiki.seeedstudio.com/xiao_esp32s3_camera_usage/),
 [TowerPro SG90](https://towerpro.com.tw/product/sg90-analog/),
-[TI SN74AHCT125](https://www.ti.com/product/SN74AHCT125). Accessed 5 October 2026.
+[TI TXU0102](https://www.ti.com/lit/ds/symlink/txu0102.pdf). Accessed 5 October 2026.
 Supplier listings and measured samples must settle signal thresholds, current
 peaks and actuator travel. F1=2 A is a starting engineering assumption, not a
 validated protection coordination result.
@@ -73,6 +76,10 @@ Boot produces no PWM until `arm`. Arming applies the current stored position
 (initially 90 degrees), so support the mechanism and fit horns at centre first.
 `stop` stops tracking and holds the last PWM; `disarm` removes pulses, which
 may let a payload fall. S1 physically interrupts motor power.
+Its separate NC auxiliary contact to ground is monitored on GPIO4 (XIAO) or
+GPIO7 (DevKit). An open contact/wire disarms and disables translator OE. Releasing
+S1 does not re-arm; a new `arm` command is required. This loop-polled input is not
+a certified or hardware-latched safety interlock.
 Neither is a certified emergency-stop function.
 
 Targets outside [-1,1], nonfinite values, trailing text and overflowing lines are

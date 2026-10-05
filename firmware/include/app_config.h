@@ -9,9 +9,13 @@ namespace config {
 #ifdef TRACKER_XIAO_SENSE
 constexpr uint8_t kYawServoPin = 1;    // D0; camera pins are separate.
 constexpr uint8_t kPitchServoPin = 2;  // D1.
+constexpr uint8_t kPwmEnablePin = 3;   // D2 -> TXU0102 OE.
+constexpr uint8_t kStopSensePin = 4;   // D3 -> separate NC stop contact to GND.
 #else
 constexpr uint8_t kYawServoPin = 4;
 constexpr uint8_t kPitchServoPin = 5;
+constexpr uint8_t kPwmEnablePin = 6;
+constexpr uint8_t kStopSensePin = 7;
 #endif
 
 constexpr uint8_t kYawPwmChannel = 0;

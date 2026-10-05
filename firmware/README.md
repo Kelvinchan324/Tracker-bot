@@ -10,6 +10,11 @@ wiring or uploading. This is not brushless-gimbal firmware or person recognition
 | `xiao-sense` (default) | XIAO ESP32-S3 Sense | GPIO1 / GPIO2 | RGB565 red-marker centroid |
 | `esp32-s3-devkitc-1` | ESP32-S3 DevKitC-1 | GPIO4 / GPIO5 | Serial targets only |
 
+EVT-A.1 also requires translator OE and the separate NC power-cut auxiliary
+contact: XIAO GPIO3/GPIO4 respectively, DevKit GPIO6/GPIO7 respectively.
+Open auxiliary contact (or disconnected cable) inhibits arm. Wire the new
+TXU0102 from the current schematic, not the obsolete AHCT125 DIP14 circuit.
+
 ## Build and upload
 
 Install PlatformIO Core or the PlatformIO extension in VS Code. Open this folder.
@@ -38,6 +43,9 @@ disarm
 ```
 
 - Boot is disarmed; `arm` applies the last commanded position (initially centre).
+  A closed auxiliary contact is required. Opening it disarms; reclosing it alone
+  does not restart motion. An external motor-rail loss without contact opening
+  is not detected: disarm before reconnecting power.
 - `target x y` accepts finite values in [-1,1], in armed serial mode only.
   Negative x/y means left/up. Actual installed directions need a hardware check.
 - Targets expire after 750 ms; the last pulse is held. There is no encoder feedback.

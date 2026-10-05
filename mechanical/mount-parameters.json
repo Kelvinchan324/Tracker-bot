@@ -1,0 +1,21 @@
+{
+  "status": "DRAFT: guessed fit allowance; measure supplied parts before fabrication",
+  "units": "mm",
+  "clearance_per_side": 0.6,
+  "wall": 3.0,
+  "base": 2.5,
+  "yaw_wall_height": 10.0,
+  "camera_wall_height": 8.0,
+  "mount_slot_length": 6.0,
+  "mount_slot_width": 3.4,
+  "unresolved": [
+    "servo mounting ears and shaft offset",
+    "horn spline and supplied screw engagement",
+    "servo cable-exit position",
+    "positive servo retention and fastener length",
+    "rotating yaw-to-pitch carrier",
+    "pitch horn to camera saddle connection",
+    "camera lens, USB connector and antenna keepouts",
+    "base matching attachment holes and underside access"
+  ]
+}

@@ -38,12 +38,18 @@ void printStatus() {
                 tracker.isArmed() ? "yes" : "no", cameraMode ? "camera" : "serial",
                 cameraReady ? "ready" : "unavailable", yawAxis.angle(),
                 pitchAxis.angle(), tracker.hasTarget(millis()) ? "yes" : "no");
+  Serial.printf("stop_contact=%s\n", tracker.interlockClosed() ? "closed" : "OPEN: arm inhibited");
 }
 
 void handleCommand(String command) {
   command.trim();
 
-  if (command == "arm") { tracker.arm(); Serial.println("Armed: last commanded position applied"); return; }
+  if (command == "arm") {
+    tracker.setInterlockClosed(digitalRead(config::kStopSensePin) == LOW);
+    tracker.arm();
+    Serial.println(tracker.isArmed() ? "Armed: last commanded position applied" : "Blocked: stop contact open");
+    return;
+  }
   if (command == "disarm") { cameraMode = false; tracker.disarm(); return; }
   if (command == "camera") {
     tracker.stopTracking();
@@ -92,7 +98,9 @@ void handleCommand(String command) {
 }
 
 void readSerialCommands() {
-  while (Serial.available() > 0) {
+  // Bound serial work so a continuous input stream cannot starve the stop check.
+  uint16_t consumed = 0;
+  while (Serial.available() > 0 && consumed++ < 128) {
     const char character = static_cast<char>(Serial.read());
     if (character == '\n' || character == '\r') {
       if (!serialOverflow && !serialLine.isEmpty()) {
@@ -112,15 +120,19 @@ void readSerialCommands() {
 }
 
 void setup() {
+  tracker.begin();
+  pinMode(config::kStopSensePin, INPUT_PULLUP);
   Serial.begin(115200);
   delay(500);
-  tracker.begin();
   cameraReady = startCameraTarget();
   Serial.println(cameraReady ? "Camera ready; motors DISARMED" : "Serial-only; motors DISARMED");
   printHelp();
 }
 
 void loop() {
+  const bool stopClosed = digitalRead(config::kStopSensePin) == LOW;
+  tracker.setInterlockClosed(stopClosed);
+  if (!stopClosed) cameraMode = false;
   readSerialCommands();
   CameraTarget target{};
   if (readCameraTarget(target) && cameraMode) {

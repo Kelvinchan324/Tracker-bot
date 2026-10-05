@@ -1,5 +1,5 @@
 {
-  "title": "Tracker Bot EVT-A",
+  "title": "Tracker Bot EVT-A.1",
   "cad_name": "Tracker_Bot_EVT_A",
   "scope": "Bench red-marker tracker; XIAO Sense + two PWM servos. MCU USB and motor 4.8 V rails are separate. No production approval.",
   "plate": [
@@ -37,7 +37,10 @@
         "USB": "USB_HOST",
         "GND": "GND",
         "D0 / GPIO1": "YAW_IN",
-        "D1 / GPIO2": "PITCH_IN"
+        "D1 / GPIO2": "PITCH_IN",
+        "3V3": "LOGIC_3V3",
+        "D2 / GPIO3": "PWM_ENABLE",
+        "D3 / GPIO4": "STOP_SENSE"
       },
       "position": [
         15,
@@ -95,13 +98,15 @@
     },
     {
       "ref": "S1",
-      "name": "Latching DC power-cut switch",
+      "name": "Latching power-cut switch, two isolated NC contacts",
       "qty": 1,
-      "selection": "Contact DC rating >= 5 A at 5 V; not safety certified",
+      "selection": "Power pole >=5 A DC at 5 V; aux pole rated for low-level signal; exact part TBD",
       "source": "[Design rationale](../docs/engineering.md)",
       "pins": {
-        "COM": "MOTOR_FUSED",
-        "NC": "MOTOR_4V8"
+        "POWER COM": "MOTOR_FUSED",
+        "POWER NC": "MOTOR_4V8",
+        "AUX COM": "STOP_SENSE",
+        "AUX NC": "GND"
       },
       "position": [
         -32,
@@ -116,25 +121,19 @@
     },
     {
       "ref": "U2",
-      "name": "SN74AHCT125N DIP14 buffer",
+      "name": "TXU0102DCUR on verified VSSOP8 breakout",
       "qty": 1,
-      "selection": "3.3 V input to 4.8 V servo PWM; DIP pin numbers",
-      "source": "[TI SN74AHCT125](https://www.ti.com/product/SN74AHCT125)",
+      "selection": "Dual-supply A-to-B translator; IC pin numbers, not breakout terminal numbers",
+      "source": "[TI TXU0102 datasheet](https://www.ti.com/lit/ds/symlink/txu0102.pdf)",
       "pins": {
-        "14 VCC": "MOTOR_4V8",
-        "7 GND": "GND",
-        "1 /1OE": "GND",
-        "2 1A": "YAW_IN",
-        "3 1Y": "YAW_PWM",
-        "4 /2OE": "GND",
-        "5 2A": "PITCH_IN",
-        "6 2Y": "PITCH_PWM",
-        "10 /3OE": "MOTOR_4V8",
-        "9 3A": "GND",
-        "8 3Y": "NC",
-        "13 /4OE": "MOTOR_4V8",
-        "12 4A": "GND",
-        "11 4Y": "NC"
+        "3 VCCA": "LOGIC_3V3",
+        "7 VCCB": "MOTOR_4V8",
+        "2 GND": "GND",
+        "6 OE": "PWM_ENABLE",
+        "5 A1": "YAW_IN",
+        "8 B1Y": "YAW_PWM",
+        "4 A2": "PITCH_IN",
+        "1 B2Y": "PITCH_PWM"
       },
       "position": [
         30,
@@ -143,7 +142,7 @@
       ],
       "size": [
         25,
-        13,
+        18,
         12
       ]
     },
@@ -234,6 +233,70 @@
         29,
         12.2
       ]
+    },
+    {
+      "ref": "R3",
+      "name": "10k OE pull-down",
+      "qty": 1,
+      "selection": "Keeps translator disabled during MCU reset",
+      "source": "[Electrical review](../docs/power-and-interlock.md)",
+      "pins": {"1": "PWM_ENABLE", "2": "GND"}
+    },
+    {
+      "ref": "R4",
+      "name": "47k yaw PWM pull-down",
+      "qty": 1,
+      "selection": "Servo-side signal bias when translator output is high impedance",
+      "source": "[Electrical review](../docs/power-and-interlock.md)",
+      "pins": {"1": "YAW_PWM", "2": "GND"}
+    },
+    {
+      "ref": "R5",
+      "name": "47k pitch PWM pull-down",
+      "qty": 1,
+      "selection": "Servo-side signal bias when translator output is high impedance",
+      "source": "[Electrical review](../docs/power-and-interlock.md)",
+      "pins": {"1": "PITCH_PWM", "2": "GND"}
+    },
+    {
+      "ref": "R6",
+      "name": "10k stop-contact pull-up",
+      "qty": 1,
+      "selection": "Open aux contact or broken wire -> logic high -> disarm",
+      "source": "[Electrical review](../docs/power-and-interlock.md)",
+      "pins": {"1": "LOGIC_3V3", "2": "STOP_SENSE"}
+    },
+    {
+      "ref": "R7",
+      "name": "1k 0.25W motor-rail bleeder",
+      "qty": 1,
+      "selection": "Nominal 23mW at 4.8V; discharge timing must be measured",
+      "source": "[Electrical review](../docs/power-and-interlock.md)",
+      "pins": {"1": "MOTOR_4V8", "2": "GND"}
+    },
+    {
+      "ref": "C3",
+      "name": "100nF ceramic / >=10V logic bypass",
+      "qty": 1,
+      "selection": "At TXU0102 pins 3 and 2",
+      "source": "[TI TXU0102 datasheet](https://www.ti.com/lit/ds/symlink/txu0102.pdf)",
+      "pins": {"1": "LOGIC_3V3", "2": "GND"}
+    },
+    {
+      "ref": "H3",
+      "name": "Draft yaw servo seat (parametric printed candidate)",
+      "qty": 1,
+      "selection": "NOT fabrication approved; retention, fit and plate attachment unresolved",
+      "source": "[Mechanical draft guide](../mechanical/README.md)",
+      "pins": {}
+    },
+    {
+      "ref": "H4",
+      "name": "Draft camera saddle (parametric printed candidate)",
+      "qty": 1,
+      "selection": "NOT fabrication approved; floating until pitch carrier is designed",
+      "source": "[Mechanical draft guide](../mechanical/README.md)",
+      "pins": {}
     },
     {
       "ref": "H1",

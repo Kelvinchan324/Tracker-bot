@@ -1,6 +1,6 @@
 # Tracker Bot
 
-## EVT-A build and teaching manual (5 October 2026)
+## EVT-A.1 build and teaching manual (5 October 2026)
 
 The implemented reference build is **XIAO ESP32-S3 Sense + two SG90 servos**
 tracking a red marker. It is an untested hardware draft; it does not yet detect
@@ -10,22 +10,29 @@ people. The earlier product vision below describes future goals.
 [Wiring schematic](hardware/schematic.svg) · [Placement drawing](mechanical/placement.svg) ·
 [STEP draft](mechanical/layout-draft.step)
 
+**Wiring revision:** EVT-A.1 uses TXU0102, not the old AHCT125. Read the
+[power-cut and interlock guide](docs/power-and-interlock.md) and
+[parametric mounting drafts](mechanical/README.md). Do not reuse the old pinout.
+
 1. Read the wiring and power notes. Keep the camera USB and motor supplies separate;
-   join ground. Wire GPIO1/D0 to yaw and GPIO2/D1 to pitch through the specified buffer.
+   join ground. Wire GPIO1/D0 and GPIO2/D1 through the translator, GPIO3 to OE,
+   and GPIO4 to the separate NC stop contact with its 3.3 V pull-up.
 2. Install PlatformIO and run `cd firmware`, then `pio run -e xiao-sense`.
 3. With horns removed and motor power off, connect USB and run
    `pio run -e xiao-sense --target upload`, then `pio device monitor`.
 4. Boot should report motors DISARMED. Verify no PWM. Enable motor power, support
-   the mechanism, then enter `arm`; a centre pulse can cause movement.
+   the mechanism, close the stop contact, then enter `arm`; the last commanded
+   position (initially centre) can cause movement. Release after a stop does not re-arm.
 5. Try `target 0.2 0` in serial mode. Check direction and timeout before fitting
    the horns. `stop` holds position; `disarm` removes PWM. Use the physical cut if needed.
 6. Enter `camera` and present one red marker. Remove it to check lost-target behaviour.
    Enter `serial` to return to manual target input. Use `status` for diagnostics.
 7. Follow the four lessons in the engineering manual and save the measured results.
 
-The CAD files contain component envelopes and a drilled base, not finished servo
-brackets. Use `python tools/build_engineering.py --cad` with CadQuery 2.8.0 to
-regenerate. Actual motor travel, bracket fit, camera orientation, back-feed,
+The CAD files contain component envelopes, a drilled base and two candidate mounts,
+not a finished pan/tilt mechanism. Use `python tools/build_engineering.py --cad`
+and `python tools/build_mounts.py` with CadQuery 2.8.0 to regenerate.
+Actual motor travel, bracket fit, camera orientation, back-feed,
 continuous current and tracking quality remain physical acceptance tests.
 
 

@@ -11,6 +11,8 @@ class TrackerController {
   void begin();
   void arm();
   void disarm();
+  void setInterlockClosed(bool closed);
+  bool interlockClosed() const { return interlockClosed_; }
   bool isArmed() const { return armed_; }
   void updateTarget(float horizontalError, float verticalError,
                     uint32_t timestampMs);
@@ -28,5 +30,6 @@ class TrackerController {
   uint32_t lastControlMs_ = 0;
   bool tracking_ = false;
   bool armed_ = false;
+  bool interlockClosed_ = false;
 };
 

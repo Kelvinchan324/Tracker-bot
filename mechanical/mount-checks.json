@@ -1,0 +1,43 @@
+{
+  "status": "CAD-only checks; no physical fit or load validation",
+  "parts": [
+    {
+      "name": "yaw-seat-draft",
+      "component": "M1",
+      "floor_z_mm": 6.5,
+      "slot_centres_world_mm": [
+        [
+          -18.1,
+          0,
+          5.25
+        ],
+        [
+          18.1,
+          0,
+          5.25
+        ]
+      ],
+      "volume_mm3": 4550.104,
+      "release": "NOT APPROVED; unresolved interfaces in mount-parameters.json"
+    },
+    {
+      "name": "camera-saddle-draft",
+      "component": "U1",
+      "floor_z_mm": 79.5,
+      "slot_centres_world_mm": [
+        [
+          -2.6,
+          0,
+          78.25
+        ],
+        [
+          32.6,
+          0,
+          78.25
+        ]
+      ],
+      "volume_mm3": 4033.604,
+      "release": "NOT APPROVED; unresolved interfaces in mount-parameters.json"
+    }
+  ]
+}

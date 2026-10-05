@@ -18,6 +18,10 @@ int main() {
   tracker.tick(20);
   assert(near(yaw.angle(), 90) && !tracker.hasTarget(20));
   tracker.arm();
+  assert(!tracker.isArmed() && gpio[config::kPwmEnablePin] == LOW);
+  tracker.setInterlockClosed(true);
+  tracker.arm();
+  assert(gpio[config::kPwmEnablePin] == HIGH);
   assert(duty[0] > 0 && duty[1] > 0);
   tracker.updateTarget(1, -1, 0);
   tracker.tick(20);
@@ -40,6 +44,7 @@ int main() {
   tracker.tick(800);
   assert(near(yaw.angle(), 90) && near(pitch.angle(), 90));
   tracker.disarm();
+  assert(gpio[config::kPwmEnablePin] == LOW);
   yaw.moveBy(10); tracker.center();
   assert(!tracker.isArmed() && duty[0] == 0 && duty[1] == 0);
   assert(near(yaw.angle(), 90));
@@ -50,6 +55,13 @@ int main() {
   assert(near(yaw.angle(), 91.1F) && tracker.hasTarget(9));
   tracker.tick(800);
   assert(!tracker.hasTarget(800));
+  tracker.setInterlockClosed(false);
+  assert(!tracker.isArmed() && gpio[config::kPwmEnablePin] == LOW && duty[0] == 0);
+  tracker.setInterlockClosed(true);
+  assert(!tracker.isArmed()); // Release alone must not re-arm.
+  tracker.arm();
+  assert(tracker.isArmed());
+  tracker.disarm();
 
   std::vector<uint8_t> frame(20 * 20 * 2, 0);
   // 25 sampled red pixels occupy the bottom-right quadrant.

@@ -13,7 +13,10 @@
         "USB": "USB_HOST",
         "GND": "GND",
         "D0 / GPIO1": "YAW_IN",
-        "D1 / GPIO2": "PITCH_IN"
+        "D1 / GPIO2": "PITCH_IN",
+        "3V3": "LOGIC_3V3",
+        "D2 / GPIO3": "PWM_ENABLE",
+        "D3 / GPIO4": "STOP_SENSE"
       },
       "position": [
         15,
@@ -49,13 +52,15 @@
     },
     {
       "ref": "S1",
-      "name": "Latching DC power-cut switch",
+      "name": "Latching power-cut switch, two isolated NC contacts",
       "qty": 1,
-      "selection": "Contact DC rating >= 5 A at 5 V; not safety certified",
+      "selection": "Power pole >=5 A DC at 5 V; aux pole rated for low-level signal; exact part TBD",
       "source": "[Design rationale](../docs/engineering.md)",
       "pins": {
-        "COM": "MOTOR_FUSED",
-        "NC": "MOTOR_4V8"
+        "POWER COM": "MOTOR_FUSED",
+        "POWER NC": "MOTOR_4V8",
+        "AUX COM": "STOP_SENSE",
+        "AUX NC": "GND"
       },
       "position": [
         -32,
@@ -70,25 +75,19 @@
     },
     {
       "ref": "U2",
-      "name": "SN74AHCT125N DIP14 buffer",
+      "name": "TXU0102DCUR on verified VSSOP8 breakout",
       "qty": 1,
-      "selection": "3.3 V input to 4.8 V servo PWM; DIP pin numbers",
-      "source": "[TI SN74AHCT125](https://www.ti.com/product/SN74AHCT125)",
+      "selection": "Dual-supply A-to-B translator; IC pin numbers, not breakout terminal numbers",
+      "source": "[TI TXU0102 datasheet](https://www.ti.com/lit/ds/symlink/txu0102.pdf)",
       "pins": {
-        "14 VCC": "MOTOR_4V8",
-        "7 GND": "GND",
-        "1 /1OE": "GND",
-        "2 1A": "YAW_IN",
-        "3 1Y": "YAW_PWM",
-        "4 /2OE": "GND",
-        "5 2A": "PITCH_IN",
-        "6 2Y": "PITCH_PWM",
-        "10 /3OE": "MOTOR_4V8",
-        "9 3A": "GND",
-        "8 3Y": "NC",
-        "13 /4OE": "MOTOR_4V8",
-        "12 4A": "GND",
-        "11 4Y": "NC"
+        "3 VCCA": "LOGIC_3V3",
+        "7 VCCB": "MOTOR_4V8",
+        "2 GND": "GND",
+        "6 OE": "PWM_ENABLE",
+        "5 A1": "YAW_IN",
+        "8 B1Y": "YAW_PWM",
+        "4 A2": "PITCH_IN",
+        "1 B2Y": "PITCH_PWM"
       },
       "position": [
         30,
@@ -97,7 +96,7 @@
       ],
       "size": [
         25,
-        13,
+        18,
         12
       ]
     },

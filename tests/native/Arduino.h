@@ -5,6 +5,10 @@
 using std::min;
 inline uint32_t fakeNow = 0;
 inline uint32_t duty[16] = {};
+constexpr int LOW = 0, HIGH = 1, OUTPUT = 2;
+inline int gpio[64] = {};
+inline void digitalWrite(uint8_t pin, int value) { gpio[pin] = value; }
+inline void pinMode(uint8_t, int) {}
 inline uint32_t millis() { return fakeNow; }
 inline void ledcSetup(uint8_t, uint16_t, uint8_t) {}
 inline void ledcAttachPin(uint8_t, uint8_t) {}
